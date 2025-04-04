@@ -1,6 +1,4 @@
-import { AMapCardConfig } from "./types";
-
-export const themes = [
+export const AMAP_THEMES = [
   "normal", // 标准
   "dark", // 幻影黑
   "light", // 月光银
@@ -12,24 +10,13 @@ export const themes = [
   "blue", // 靛青蓝
   "darkblue", // 极夜蓝
   "wine", // 酱籽
-];
+] as const;
 
-export const controls = [
+export const AMAP_CONTROLS = [
   "ToolBar", // 缩放控件
   "Scale", // 比例尺控件
   "ControlBar", // 控制罗盘控件
   "Geolocation", // 定位控件
   "HawkEye", // 鹰眼控件
   "MapType", // 图层切换控件
-];
-
-export const defaultConfig: AMapCardConfig = {
-  type: "amap-card",
-  lightTheme: "normal",
-  darkTheme: "dark",
-  Key: "",
-  security: "",
-  traffic: false,
-  zoom: 15,
-  entities: [],
-};
+] as const;
