@@ -1,2 +1,3 @@
-# lovelace-amap-card
-Lovelace amap card for home assistant.
+# Lovelace AMap Card
+
+Lovelace AMap Card for Home Assistant.

@@ -1,0 +1,23 @@
+{
+  "editor": {
+    "card": {
+      "theme": {
+        "title": "主题",
+        "options": {
+          "auto": "自动",
+          "normal": "标准",
+          "dark": "幻影黑",
+          "light": "月光银",
+          "whitesmoke": "远山黛",
+          "fresh": "草色青",
+          "grey": "雅士灰",
+          "graffiti": "涂鸦",
+          "macaron": "马卡龙",
+          "blue": "靛青蓝",
+          "darkblue": "极夜蓝",
+          "wine": "酱籽"
+        }
+      }
+    }
+  }
+}

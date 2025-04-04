@@ -1,0 +1,56 @@
+{
+  "editor": {
+    "title": {
+      "label": "Title"
+    },
+    "api": {
+      "key": {
+        "label": "Key"
+      },
+      "security": {
+        "label": "Security Key"
+      }
+    },
+    "appearance": {
+      "label": "Appearance",
+      "theme": {
+        "mode": {
+          "auto": "Theme Mode",
+          "light": "Light Theme",
+          "dark": "Dark Theme"
+        },
+        "options": {
+          "auto": "Auto",
+          "normal": "Normal",
+          "dark": "Dark",
+          "light": "Light",
+          "whitesmoke": "Whitesmoke",
+          "fresh": "Fresh",
+          "grey": "Grey",
+          "graffiti": "Graffiti",
+          "macaron": "Macaron",
+          "blue": "Blue",
+          "darkblue": "Darkblue",
+          "wine": "Wine"
+        }
+      },
+      "zoom": {
+        "label": "Zoom"
+      },
+      "control": {
+        "label": "Control",
+        "options": {
+          "ToolBar": "Zoom Control",
+          "Scale": "Scale Control",
+          "ControlBar": "Compass Control",
+          "Geolocation": "Location Control",
+          "HawkEye": "Overview Control",
+          "MapType": "Map Type Control"
+        }
+      }
+    },
+    "entity": {
+      "label": "Entity"
+    }
+  }
+}
