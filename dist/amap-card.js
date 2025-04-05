@@ -471,7 +471,7 @@ let AMapCard = class AMapCard extends r$2 {
                 version: "2.0",
                 plugins: getMapControls(this._config.controls) ?? [],
             });
-            this.map = new AMap.Map("amap", {
+            this.map = new AMap.Map(this.shadowRoot.getElementById("amap"), {
                 viewMode: this._config.viewMode || "2D",
                 zoom: this._config.zoom || 12,
                 mapStyle: getMapStyle(this._getTheme()) ?? [],
