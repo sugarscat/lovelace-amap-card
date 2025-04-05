@@ -267,21 +267,17 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
             },
             {
                 name: "lightTheme",
-                selector: {
-                    type: "select",
-                    options: AMAP_THEMES.map((item) => [item, customLocalize("editor.api." + item)]),
-                    default: "normal",
-                },
+                type: "select",
+                options: AMAP_THEMES.map((item) => [item, customLocalize("editor.api." + item)]),
+                default: "normal",
                 label: customLocalize("editor.appearance.theme.mode.light"),
                 value: this._config.lightTheme || "",
             },
             {
                 name: "darkTheme",
-                selector: {
-                    type: "select",
-                    options: AMAP_THEMES.map((item) => [item, customLocalize("editor.api." + item)]),
-                    default: "normal",
-                },
+                type: "select",
+                options: AMAP_THEMES.map((item) => [item, customLocalize("editor.api." + item)]),
+                default: "dark",
                 label: customLocalize("editor.appearance.theme.mode.dark"),
                 value: this._config.darkTheme || "",
             },
@@ -299,14 +295,11 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
             },
             {
                 name: "controls",
-                selector: {
-                    type: "select",
-                    multiple: true,
-                    options: AMAP_CONTROLS.map((item) => [
-                        item,
-                        customLocalize("editor.appearance.control." + item),
-                    ]),
-                },
+                type: "multi_select",
+                options: AMAP_CONTROLS.reduce((acc, item) => {
+                    acc[item] = customLocalize("editor.appearance.control." + item);
+                    return acc;
+                }, {}),
                 label: customLocalize("editor.appearance.control"),
                 value: this._config.controls || [],
             },
@@ -340,28 +333,14 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
     _handleValueChanged(ev) {
         const updatedValue = ev.detail.value;
         this._config = {
+            ...updatedValue,
             ...this._config,
-            updatedValue,
         };
         this.dispatchEvent(new CustomEvent("config-changed", {
             detail: { config: this._config },
         }));
     }
 };
-AMapCardEditor.styles = i$3 `
-    .card-config {
-      display: flex;
-      flex-direction: column;
-    }
-    label {
-      font-size: 0.85rem;
-      font-weight: bold;
-      margin-top: 4px;
-    }
-    .ha-selector {
-      margin-bottom: 24px;
-    }
-  `;
 __decorate([
     n({ attribute: false })
 ], AMapCardEditor.prototype, "hass", void 0);
