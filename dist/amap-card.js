@@ -258,13 +258,13 @@ let AMapCardEditor = class AMapCardEditor extends r$3 {
             return E;
         const customLocalize = setupCustomLocalize(this.hass);
         return x `
-      <h3>${customLocalize("editor.api.title")}</h3>
-      <ha-from>
+      <div class="amap-card-editor">
+        <h3>${customLocalize("editor.api.title")}</h3>
         <ha-textfield
           class="full-line"
           label="${customLocalize("editor.api.key")}"
           .value=${this._config.Key}
-          .configValue=${"Key"}
+          .configValue=${"key"}
           @input=${this._valueChanged}
         ></ha-textfield>
         <ha-textfield
@@ -274,15 +274,13 @@ let AMapCardEditor = class AMapCardEditor extends r$3 {
           .configValue=${"security"}
           @input=${this._valueChanged}
         ></ha-textfield>
-      </ha-from>
 
-      <ha-expansion-panel
-        outlined
-        expanded
-        themeIcon="mdi:theme"
-        header="${customLocalize("editor.appearance.title")}"
-      >
-        <div class="side-by-side">
+        <ha-expansion-panel
+          outlined
+          expanded
+          themeIcon="mdi:theme"
+          header="${customLocalize("editor.appearance.title")}"
+        >
           <h5>${customLocalize("editor.appearance.control.title")}</h5>
           ${AMAP_CONTROLS.map((item) => x `
               <ha-formfield .label=${customLocalize("editor.appearance.control." + item)}>
@@ -293,6 +291,7 @@ let AMapCardEditor = class AMapCardEditor extends r$3 {
                 ></ha-checkbox>
               </ha-formfield>
             `)}
+
           <ha-formfield label="${customLocalize("editor.appearance.traffic")}">
             <ha-switch
               .checked=${this._config.traffic}
@@ -306,28 +305,28 @@ let AMapCardEditor = class AMapCardEditor extends r$3 {
             .configValue=${"zoom"}
             @input=${this._valueChanged}
           ></ha-textfield>
-        </div>
-      </ha-expansion-panel>
+        </ha-expansion-panel>
 
-      <h3>${customLocalize("editor.entity")}</h3>
-      <ha-entity-picker
-        .hass=${this.hass}
-        .value=${this._config.entities}
-        .includeDomains=${["zone"]}
-        allow-custom-entity
-        multiple
-        @value-changed=${this._zonesChanged}
-      ></ha-entity-picker>
+        <h3>${customLocalize("editor.entity")}</h3>
+        <ha-entity-picker
+          .hass=${this.hass}
+          .value=${this._config.entities}
+          .includeDomains=${["zone"]}
+          allow-custom-entity
+          multiple
+          @value-changed=${this._zonesChanged}
+        ></ha-entity-picker>
+      </div>
     `;
     }
     _valueChanged(ev) {
         const target = ev.target;
+        console.log(target);
         const configValue = target.getAttribute("configValue");
         console.log(configValue);
         if (!configValue)
             return;
         const newValue = target.type === "checkbox" ? target.checked : target.value;
-        console.log(newValue);
         if (newValue === undefined || newValue === null)
             return;
         if (!this._config || this._config[configValue] === newValue)
@@ -374,15 +373,10 @@ AMapCardEditor.styles = i$3 `
     .full-line {
       width: 100%;
     }
-
-    .side-by-side {
+    .amap-card-editor {
       display: flex;
-      align-items: flex-end;
-      flex-wrap: wrap;
-    }
-    .side-by-side > * {
-      flex: 1;
-      padding-right: 4px;
+      flex-direction: column;
+      gap: 20px;
     }
   `;
 __decorate([
