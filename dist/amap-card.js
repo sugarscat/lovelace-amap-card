@@ -95,6 +95,24 @@ const AMAP_CONTROLS = [
     "HawkEye", // 鹰眼控件
     "MapType", // 图层切换控件
 ];
+const AMAP_CONTROLS_POSE = {
+    ToolBar: {
+        position: {
+            top: "110px",
+            right: "40px",
+        },
+    },
+    ControlBar: {
+        position: {
+            top: "10px",
+            right: "10px",
+        },
+    },
+    Scale: null,
+    Geolocation: null,
+    HawkEye: null,
+    MapType: null,
+};
 
 var card$1 = {
 	not_found: "Entity not found",
@@ -131,7 +149,7 @@ var editor$1 = {
 		},
 		viewMode: "View Mode",
 		zoom: "Zoom",
-		traffic: "Road Condition",
+		traffic: "Real-time road conditions",
 		control: {
 			title: "Control",
 			ToolBar: "Zoom Control",
@@ -191,7 +209,7 @@ var editor = {
 		},
 		viewMode: "视图模式",
 		zoom: "缩放",
-		traffic: "路况",
+		traffic: "实时路况",
 		control: {
 			title: "控件",
 			ToolBar: "缩放控件",
@@ -453,18 +471,24 @@ let AMapCard = class AMapCard extends r$2 {
                 version: "2.0",
                 plugins: getMapControls(this._config.controls) ?? [],
             });
-            this.map = new AMap.Map(this.shadowRoot.getElementById("amap"), {
-                viewMode: this._config.viewMode || '2D',
+            this.map = new AMap.Map("amap", {
+                viewMode: this._config.viewMode || "2D",
                 zoom: this._config.zoom || 12,
                 mapStyle: getMapStyle(this._getTheme()) ?? [],
-                showTraffic: this._config.traffic || false,
                 center: [116.397428, 39.90923], //地图中心点
             });
+            // 实时路况图层
+            if (this._config.traffic) {
+                const trafficLayer = new AMap.TileLayer.Traffic({
+                    zIndex: 10,
+                    zooms: [7, 22],
+                });
+                trafficLayer.show();
+            }
             // 添加控件
             if (this._config.controls.length > 0) {
                 this._config.controls.forEach((control) => {
-                    console.log("AMap", new AMap[control]());
-                    this.map.addControl(new AMap[control]());
+                    this.map.addControl(new AMap[control](AMAP_CONTROLS_POSE[control] ?? {}));
                 });
             }
             // 添加实体
