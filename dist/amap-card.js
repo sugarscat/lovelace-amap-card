@@ -392,26 +392,19 @@ let AMapCardEditor = class AMapCardEditor extends r$3 {
     `;
     }
     _valueChanged(ev) {
-        console.log(ev.target);
         const target = ev.target;
-        if (target.configObject[target.configAttribute] == target.value) {
+        const configValue = target.getAttribute('configValue');
+        if (!configValue)
             return;
-        }
-        if (target.configAdd && target.value !== "") {
-            target.configObject = Object.assign(target.configObject, {
-                [target.configAdd]: { [target.configAttribute]: target.value },
-            });
-        }
-        if (target.configAttribute && target.configObject && !target.configAdd) {
-            if (target.value == "" || target.value === false) {
-                if (target.ignoreNull == true)
-                    return;
-                delete target.configObject[target.configAttribute];
-            }
-            else {
-                target.configObject[target.configAttribute] = target.value;
-            }
-        }
+        const newValue = target.type === 'checkbox' ? target.checked : target.value;
+        if (newValue === undefined || newValue === null)
+            return;
+        if (!this._config || this._config[configValue] === newValue)
+            return;
+        this._config = {
+            ...this._config,
+            [configValue]: newValue,
+        };
         ne(this, "config-changed", { config: this._config });
     }
     _zonesChanged(ev) {
@@ -519,22 +512,23 @@ let AMapCard = class AMapCard extends r$3 {
         if (!this.hass) {
             return E;
         }
-        const customLocalize = setupCustomLocalize(this.hass);
-        if (!this._config) {
-            return x `<ha-card
-        ><ha-alert alert-type="error">${customLocalize("card.config_not_found")}</ha-alert></ha-card
-      >`;
-        }
         if (!this._config.Key || !this._config.security) {
-            return x `<ha-card
-        ><ha-alert alert-type="error">${customLocalize("card.Key_not_found")}</ha-alert></ha-card
-      >`;
+            return x `<ha-card></ha-card>`;
         }
         return x `<ha-card><div id="amap"></div></ha-card>`;
     }
     async _loadMap() {
+        const customLocalize = setupCustomLocalize(this.hass);
+        const container = this.shadowRoot.getElementById("amap");
+        if (!this._config) {
+            container.innerHTML = `<ha-alert alert-type="error">
+        ${customLocalize("card.config_not_found")}
+      </ha-alert>`;
+        }
         if (!this._config.Key || !this._config.security) {
-            console.error("AMap Key or Security code not configured");
+            container.innerHTML = `<ha-alert alert-type="error">
+        ${customLocalize("card.Key_not_found")}
+      </ha-alert>`;
             return;
         }
         window._AMapSecurityConfig = {
@@ -547,7 +541,7 @@ let AMapCard = class AMapCard extends r$3 {
                 plugins: this._config.controls,
                 Loca: { version: "2.0" },
             });
-            this.map = new AMap.Map(this.shadowRoot.getElementById("amap"), {
+            this.map = new AMap.Map(container, {
                 viewMode: this._config.viewMode,
                 zoom: this._config.zoom,
                 mapStyle: getMapStyle(this._getTheme()),
