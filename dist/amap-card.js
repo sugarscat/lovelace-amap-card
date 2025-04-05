@@ -249,16 +249,25 @@ let AMapCardEditor = class AMapCardEditor extends r$3 {
             return E;
         const customLocalize = setupCustomLocalize(this.hass);
         return x `
-      <div class="amap-card-editor">
+      <ha-from>
         <h3>${customLocalize("editor.api.title")}</h3>
-        <label>${customLocalize("editor.api.key")}</label>
         <ha-selector
+          lable="${customLocalize("editor.api.key")}"
+          .configValue="key"
           .hass=${this.hass}
           .selector=${{ text: {} }}
           .value=${this._config.Key}
           @value-changed=${this._valueChanged}
         ></ha-selector>
-      </div>
+        <ha-selector
+          lable="${customLocalize("editor.api.security")}"
+          .configValue="security"
+          .hass=${this.hass}
+          .selector=${{ text: {} }}
+          .value=${this._config.security}
+          @value-changed=${this._valueChanged}
+        ></ha-selector>
+      </ha-from>
     `;
     }
     _valueChanged(ev) {
@@ -314,11 +323,6 @@ let AMapCardEditor = class AMapCardEditor extends r$3 {
 AMapCardEditor.styles = i$3 `
     .full-line {
       width: 100%;
-    }
-    .amap-card-editor {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
     }
   `;
 __decorate([
