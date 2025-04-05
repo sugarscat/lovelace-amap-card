@@ -1,0 +1,6 @@
+{
+  "name": "AMap Card",
+  "render_readme": true,
+  "filename":"amap-card.js",
+  "country": ["CN"]
+}

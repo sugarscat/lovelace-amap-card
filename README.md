@@ -15,5 +15,5 @@ Thanks for your contribution to the project!
 This software wouldn't have been possible without:
 
 | Name                                                                 |                                   License                                   |
-|----------------------------------------------------------------------|:---------------------------------------------------------------------------:|
+| -------------------------------------------------------------------- | :-------------------------------------------------------------------------: |
 | [boilerplate-card](https://github.com/custom-cards/boilerplate-card) | [MIT](https://github.com/custom-cards/boilerplate-card/blob/master/LICENSE) |

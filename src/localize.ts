@@ -14,6 +14,7 @@ function getTranslatedString(key: string, lang: string): string | undefined {
     return key
       .split(".")
       .reduce((o, i) => (o as Record<string, unknown>)[i], languages[lang]) as string;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
   } catch (_) {
     return undefined;
   }

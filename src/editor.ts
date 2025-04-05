@@ -7,20 +7,21 @@ import { AMAP_CONTROLS, AMAP_THEMES } from "./const";
 
 const defaultConfig: AMapCardConfig = {
   type: "amap-card",
+  Key: "",
+  security: "",
+  viewMode: "2D",
   lightTheme: "normal",
   darkTheme: "dark",
   controls: ["ToolBar", "Geolocation"],
-  Key: "",
-  security: "",
   traffic: false,
   zoom: 15,
-  zones: [],
+  entities: [],
 };
 
 @customElement("amap-card-editor")
 export class AMapCardEditor extends LitElement implements LovelaceCardEditor {
-  @property({ attribute: false }) public hass?: HomeAssistant;
-  @state() private _config?: AMapCardConfig;
+  @property({ attribute: false }) public hass!: HomeAssistant;
+  @state() private _config!: AMapCardConfig;
   @state() private theTheme = "auto";
 
   setConfig(config: AMapCardConfig): void {
@@ -112,7 +113,7 @@ export class AMapCardEditor extends LitElement implements LovelaceCardEditor {
             (item) => html`
               <ha-formfield .label=${customLocalize("editor.control.options." + item)}>
                 <ha-checkbox
-                  .checked=${this._config?.controls.includes(item)}
+                  .checked=${this._config.controls.includes(item)}
                   .value=${item}
                   @change=${this._handleControlsChange}
                 ></ha-checkbox>
@@ -131,7 +132,7 @@ export class AMapCardEditor extends LitElement implements LovelaceCardEditor {
         <ha-formfield label="${customLocalize("editor.entity.label")}">
           <ha-entity-picker
             .hass=${this.hass}
-            .value=${this._config.zones}
+            .value=${this._config.entities}
             .includeDomains=${["zone"]}
             allow-custom-entity
             multiple
@@ -169,7 +170,7 @@ export class AMapCardEditor extends LitElement implements LovelaceCardEditor {
   private _zonesChanged(ev: CustomEvent) {
     this._config = {
       ...this._config!,
-      zones: ev.detail.value,
+      entities: ev.detail.value,
     };
     fireEvent(this, "config-changed", { config: this._config });
   }
@@ -192,8 +193,8 @@ export class AMapCardEditor extends LitElement implements LovelaceCardEditor {
     const checked = checkbox.checked;
 
     const newControls = checked
-      ? [...(this._config?.controls ?? []), value]
-      : (this._config?.controls.filter((v) => v !== value) ?? []);
+      ? [...this._config.controls, value]
+      : this._config.controls.filter((v) => v !== value);
 
     this._config = {
       ...this._config!,

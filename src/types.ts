@@ -6,12 +6,13 @@ export type AMapControl = (typeof AMAP_CONTROLS)[number];
 
 export interface AMapCardConfig {
   type: string;
-  lightTheme?: AMapTheme;
-  darkTheme?: AMapTheme;
   Key: string;
   security: string;
+  viewMode: "2D" | "3D";
+  lightTheme: AMapTheme;
+  darkTheme: AMapTheme;
   traffic: boolean;
   controls: AMapControl[];
-  zoom?: number;
-  zones?: [];
+  zoom: number;
+  entities: [];
 }

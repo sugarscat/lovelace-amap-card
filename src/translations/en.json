@@ -1,4 +1,8 @@
 {
+  "card": {
+    "not_found": "Entity not found",
+    "config_not_found": "Configuration not found"
+  },
   "editor": {
     "title": {
       "label": "Title"

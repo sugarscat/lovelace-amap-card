@@ -1,8 +1,28 @@
 {
+  "card": {
+    "not_found": "未找到实体",
+    "config_not_found": "未找到配置"
+  },
   "editor": {
-    "card": {
+    "title": {
+      "label": "标题"
+    },
+    "api": {
+      "key": {
+        "label": "Key"
+      },
+      "security": {
+        "label": "Security Key"
+      }
+    },
+    "appearance": {
+      "label": "外观",
       "theme": {
-        "title": "主题",
+        "mode": {
+          "auto": "主题模式",
+          "light": "亮色主题",
+          "dark": "深色主题"
+        },
         "options": {
           "auto": "自动",
           "normal": "标准",
@@ -17,7 +37,24 @@
           "darkblue": "极夜蓝",
           "wine": "酱籽"
         }
+      },
+      "zoom": {
+        "label": "缩放"
+      },
+      "control": {
+        "label": "控件",
+        "options": {
+          "ToolBar": "缩放控件",
+          "Scale": "比例尺控件",
+          "ControlBar": "控制罗盘控件",
+          "Geolocation": "定位控件",
+          "HawkEye": "鹰眼控件",
+          "MapType": "图层切换控件"
+        }
       }
+    },
+    "entity": {
+      "label": "实体"
     }
   }
 }

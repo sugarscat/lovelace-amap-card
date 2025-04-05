@@ -1,10 +1,10 @@
 import { AMapControl, AMapTheme } from "./types";
 
-export const getMapStyle = (theme: AMapTheme) => {
+export function getMapStyle(theme: AMapTheme) {
   return "amap://styles/" + theme;
-};
+}
 
-export const getMapControls = (controls: AMapControl[]) => {
+export function getMapControls(controls: AMapControl[]) {
   // "AMap." + control，并以,分隔;
   return controls.map((control) => "AMap." + control).join(",");
-};
+}
