@@ -268,7 +268,10 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
             {
                 name: "lightTheme",
                 type: "select",
-                options: AMAP_THEMES.map((item) => [item, customLocalize("editor.api." + item)]),
+                options: AMAP_THEMES.map((item) => [
+                    item,
+                    customLocalize("editor.appearance.theme.options." + item),
+                ]),
                 default: "normal",
                 label: customLocalize("editor.appearance.theme.mode.light"),
                 value: this._config.lightTheme || "",
@@ -276,7 +279,10 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
             {
                 name: "darkTheme",
                 type: "select",
-                options: AMAP_THEMES.map((item) => [item, customLocalize("editor.api." + item)]),
+                options: AMAP_THEMES.map((item) => [
+                    item,
+                    customLocalize("editor.appearance.theme.options." + item),
+                ]),
                 default: "dark",
                 label: customLocalize("editor.appearance.theme.mode.dark"),
                 value: this._config.darkTheme || "",
@@ -288,20 +294,20 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
                 value: this._config.viewMode || "2D",
             },
             {
-                name: "traffic",
-                selector: { boolean: {} },
-                label: customLocalize("editor.appearance.traffic"),
-                value: this._config.traffic ?? false,
-            },
-            {
                 name: "controls",
                 type: "multi_select",
                 options: AMAP_CONTROLS.reduce((acc, item) => {
                     acc[item] = customLocalize("editor.appearance.control." + item);
                     return acc;
                 }, {}),
-                label: customLocalize("editor.appearance.control"),
+                label: customLocalize("editor.appearance.control.title"),
                 value: this._config.controls || [],
+            },
+            {
+                name: "traffic",
+                selector: { boolean: {} },
+                label: customLocalize("editor.appearance.traffic"),
+                value: this._config.traffic ?? false,
             },
             {
                 name: "zoom",
@@ -331,11 +337,7 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
     `;
     }
     _handleValueChanged(ev) {
-        const updatedValue = ev.detail.value;
-        this._config = {
-            ...updatedValue,
-            ...this._config,
-        };
+        this._config = ev.detail.value;
         this.dispatchEvent(new CustomEvent("config-changed", {
             detail: { config: this._config },
         }));
