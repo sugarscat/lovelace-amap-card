@@ -413,6 +413,12 @@ let AMapCard = class AMapCard extends r$2 {
     getCardSize() {
         return 4;
     }
+    // 卸载时执行
+    disconnectedCallback() {
+        if (this.map) {
+            this.map.destroy();
+        }
+    }
     firstUpdated() {
         this._loadMap().then();
     }
@@ -445,18 +451,19 @@ let AMapCard = class AMapCard extends r$2 {
             const AMap = await AMapLoader.load({
                 key: this._config.key,
                 version: "2.0",
-                plugins: getMapControls(this._config.controls),
+                plugins: getMapControls(this._config.controls) ?? [],
             });
             this.map = new AMap.Map(this.shadowRoot.getElementById("amap"), {
-                viewMode: this._config.viewMode,
-                zoom: this._config.zoom,
-                mapStyle: getMapStyle(this._getTheme()),
-                showTraffic: this._config.traffic,
+                viewMode: this._config.viewMode || '2D',
+                zoom: this._config.zoom || 12,
+                mapStyle: getMapStyle(this._getTheme()) ?? [],
+                showTraffic: this._config.traffic || false,
                 center: [116.397428, 39.90923], //地图中心点
             });
             // 添加控件
             if (this._config.controls.length > 0) {
                 this._config.controls.forEach((control) => {
+                    console.log("AMap", new AMap[control]());
                     this.map.addControl(new AMap[control]());
                 });
             }
