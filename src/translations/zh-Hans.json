@@ -34,7 +34,7 @@
       },
       "viewMode": "视图模式",
       "zoom": "缩放",
-      "traffic": "路况",
+      "traffic": "实时路况",
       "control": {
         "title": "控件",
         "ToolBar": "缩放控件",

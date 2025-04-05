@@ -5,6 +5,5 @@ export function getMapStyle(theme: AMapTheme) {
 }
 
 export function getMapControls(controls: AMapControl[]) {
-  // "AMap." + control，并以,分隔;
   return controls.map((control) => "AMap." + control);
 }

@@ -20,3 +20,22 @@ export const AMAP_CONTROLS = [
   "HawkEye", // 鹰眼控件
   "MapType", // 图层切换控件
 ] as const;
+
+export const AMAP_CONTROLS_POSE = {
+  ToolBar: {
+    position: {
+      top: "110px",
+      right: "40px",
+    },
+  },
+  ControlBar: {
+    position: {
+      top: "10px",
+      right: "10px",
+    },
+  },
+  Scale: null,
+  Geolocation: null,
+  HawkEye: null,
+  MapType: null,
+};

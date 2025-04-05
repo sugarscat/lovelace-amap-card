@@ -34,7 +34,7 @@
       },
       "viewMode": "View Mode",
       "zoom": "Zoom",
-      "traffic": "Road Condition",
+      "traffic": "Real-time road conditions",
       "control": {
         "title": "Control",
         "ToolBar": "Zoom Control",
