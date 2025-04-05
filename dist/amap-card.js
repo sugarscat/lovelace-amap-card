@@ -250,125 +250,105 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
         if (!this.hass || !this._config)
             return x ``;
         const customLocalize = setupCustomLocalize(this.hass);
+        const schema = [
+            {
+                name: "key",
+                selector: { text: {} },
+                required: true,
+                label: customLocalize("editor.api.key"),
+                value: this._config.key || "",
+            },
+            {
+                name: "security",
+                selector: { text: {} },
+                label: customLocalize("editor.api.security"),
+                value: this._config.security || "",
+            },
+            {
+                name: "lightTheme",
+                selector: {
+                    select: {
+                        options: AMAP_THEMES.map((item) => [item, customLocalize("editor.api." + item)]),
+                    },
+                },
+                label: customLocalize("editor.appearance.theme.mode.light"),
+                value: this._config.lightTheme || "",
+            },
+            {
+                name: "darkTheme",
+                selector: {
+                    select: {
+                        options: AMAP_THEMES.map((item) => [item, customLocalize("editor.api." + item)]),
+                    },
+                },
+                label: customLocalize("editor.appearance.theme.mode.dark"),
+                value: this._config.darkTheme || "",
+            },
+            {
+                name: "viewMode",
+                selector: { select: { options: ["2D", "3D"] } },
+                label: customLocalize("editor.appearance.viewMode"),
+                value: this._config.viewMode || "2D",
+            },
+            {
+                name: "traffic",
+                selector: { boolean: {} },
+                label: customLocalize("editor.appearance.traffic"),
+                value: this._config.traffic ?? false,
+            },
+            {
+                name: "controls",
+                selector: {
+                    select: {
+                        multiple: true,
+                        options: AMAP_CONTROLS.map((item) => [
+                            item,
+                            customLocalize("editor.appearance.control." + item),
+                        ]),
+                    },
+                },
+                label: customLocalize("editor.appearance.control"),
+                value: this._config.controls || [],
+            },
+            {
+                name: "zoom",
+                selector: {
+                    number: { min: 3, max: 20, step: 1, mode: "slider" },
+                },
+                label: customLocalize("editor.appearance.zoom"),
+                value: this._config.zoom || 12,
+            },
+            {
+                name: "entities",
+                selector: { entity: { multiple: true, domain: "zone" } },
+                label: customLocalize("editor.entity"),
+                value: this._config.entities || [],
+            },
+        ];
         return x `
       <div class="card-config">
-        <h3>${customLocalize("editor.api.title")}</h3>
-        <ha-selector class="ha-selector"
-          .name="${customLocalize("editor.api.key")}"
+        <ha-form
           .hass=${this.hass}
-          .selector=${{ text: {} }}
-          .value=${this._config.key || ""}
-          @value-changed=${(e) => this._updateConfig("key", e.detail.value)}
-        >
-        </ha-selector>
-        <ha-selector class="ha-selector"
-          .name="${customLocalize("editor.api.security")}"
-          .hass=${this.hass}
-          .selector=${{ text: {} }}
-          .value=${this._config.security || ""}
-          @value-changed=${(e) => this._updateConfig("security", e.detail.value)}
-        >
-        </ha-selector>
-
-        <h3>${customLocalize("editor.appearance.title")}</h3>
-        <label>${customLocalize("editor.appearance.theme.mode.light")}</label>
-        <ha-selector class="ha-selector"
-          .hass=${this.hass}
-          .selector=${{
-            select: {
-                options: AMAP_THEMES.map((item) => [item, customLocalize("editor.api." + item)]),
-            },
-        }}
-          .value=${this._config.lightTheme}
-          @value-changed=${(e) => this._updateConfig("lightTheme", e.detail.value)}
-        >
-        </ha-selector>
-
-        <label>${customLocalize("editor.appearance.theme.mode.dark")}</label>
-        <ha-selector class="ha-selector"
-          .hass=${this.hass}
-          .selector=${{
-            select: {
-                type: "select",
-                options: AMAP_THEMES.map((item) => [item, customLocalize("editor.api." + item)]),
-            },
-        }}
-          .value=${this._config.darkTheme}
-          @value-changed=${(e) => this._updateConfig("darkTheme", e.detail.value)}
-        >
-        </ha-selector>
-
-        <label>${customLocalize("editor.appearance.viewMode")}</label>
-        <ha-selector class="ha-selector"
-          .hass=${this.hass}
-          .selector=${{ select: { options: ["2D", "3D"] } }}
-          .value=${this._config.viewMode}
-          @value-changed=${(e) => this._updateConfig("viewMode", e.detail.value)}
-        >
-        </ha-selector>
-
-        <label>${customLocalize("editor.appearance.traffic")}</label>
-        <ha-selector class="ha-selector"
-          .hass=${this.hass}
-          .selector=${{ boolean: {} }}
-          .value=${this._config.traffic ?? false}
-          @value-changed=${(e) => this._updateConfig("traffic", e.detail.value)}
-        >
-        </ha-selector>
-
-        <label>${customLocalize("editor.appearance.control")}</label>
-        <ha-selector class="ha-selector"
-          .hass=${this.hass}
-          .selector=${{
-            select: {
-                type: "select",
-                multiple: true,
-                options: AMAP_CONTROLS.map((item) => [
-                    item,
-                    customLocalize("editor.appearance.control." + item),
-                ]),
-            },
-        }}
-          .value=${this._config.controls || []}
-          @value-changed=${(e) => this._updateConfig("controls", e.detail.value)}
-        >
-        </ha-selector>
-
-        <label>${customLocalize("editor.appearance.zoom")}</label>
-        <ha-selector class="ha-selector"
-          .hass=${this.hass}
-          .selector=${{
-            number: {
-                min: 3,
-                max: 20,
-                step: 1,
-                mode: "slider",
-            },
-        }}
-          .value=${this._config.zoom || 12}
-          @value-changed=${(e) => this._updateConfig("zoom", e.detail.value)}
-        >
-        </ha-selector>
-
-        <h3>${customLocalize("editor.entity")}</h3>
-        <ha-selector class="ha-selector"
-          .hass=${this.hass}
-          .selector=${{ entity: { multiple: true, domain: "zone" } }}
-          .value=${this._config.entities}
-          @value-changed=${(e) => this._updateConfig("entities", [e.detail.value])}
-        >
-        </ha-selector>
+          .schema=${schema}
+          .data=${this._config}
+          @value-changed=${this._handleValueChanged}
+        ></ha-form>
       </div>
     `;
     }
-    _updateConfig(key, value) {
-        this._config = {
-            ...this._config,
-            [key]: value,
-        };
-        this.dispatchEvent(new CustomEvent("config-changed", {
-            detail: { config: this._config },
-        }));
+    _handleValueChanged(ev) {
+        const updatedValue = ev.detail.value;
+        console.log(ev, updatedValue);
+        // const key = ev.target!.name!;
+        // this._config = {
+        //   ...this._config!,
+        //   [key]: updatedValue,
+        // };
+        // this.dispatchEvent(
+        //   new CustomEvent("config-changed", {
+        //     detail: { config: this._config },
+        //   })
+        // );
     }
 };
 AMapCardEditor.styles = i$3 `
