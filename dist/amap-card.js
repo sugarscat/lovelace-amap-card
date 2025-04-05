@@ -78,7 +78,8 @@ var t,r;!function(e){e.language="language",e.system="system",e.comma_decimal="co
 
 var card$1 = {
 	not_found: "Entity not found",
-	config_not_found: "Configuration not found"
+	config_not_found: "Configuration not found",
+	Key_not_found: "AMap Key or Security code not configured"
 };
 var editor$1 = {
 	title: {
@@ -148,7 +149,8 @@ var en$1 = /*#__PURE__*/Object.freeze({
 
 var card = {
 	not_found: "未找到实体",
-	config_not_found: "未找到配置"
+	config_not_found: "未找到配置",
+	Key_not_found: "未配置高德地图密钥或安全代码"
 };
 var editor = {
 	title: {
@@ -390,9 +392,7 @@ let AMapCardEditor = class AMapCardEditor extends r$3 {
     `;
     }
     _valueChanged(ev) {
-        if (!this._config || !this.hass) {
-            return;
-        }
+        console.log(ev.target);
         const target = ev.target;
         if (target.configObject[target.configAttribute] == target.value) {
             return;
@@ -500,7 +500,7 @@ window.customCards = window.customCards || [];
 window.customCards.push({
     type: "amap-card",
     name: "AMap Card",
-    description: "Lovelace AMap Card for Home Assistant.",
+    description: "AMap Card | 高德地图卡片",
 });
 let AMapCard = class AMapCard extends r$3 {
     static async getConfigElement() {
@@ -519,13 +519,18 @@ let AMapCard = class AMapCard extends r$3 {
         if (!this.hass) {
             return E;
         }
+        const customLocalize = setupCustomLocalize(this.hass);
         if (!this._config) {
-            const customLocalize = setupCustomLocalize(this.hass);
-            return x `<ha-alert alert-type="error"
-        >${customLocalize("card.config_not_found")}</ha-alert
+            return x `<ha-card
+        ><ha-alert alert-type="error">${customLocalize("card.config_not_found")}</ha-alert></ha-card
       >`;
         }
-        return x `<div id="amap"></div>`;
+        if (!this._config.Key || !this._config.security) {
+            return x `<ha-card
+        ><ha-alert alert-type="error">${customLocalize("card.Key_not_found")}</ha-alert></ha-card
+      >`;
+        }
+        return x `<ha-card><div id="amap"></div></ha-card>`;
     }
     async _loadMap() {
         if (!this._config.Key || !this._config.security) {
