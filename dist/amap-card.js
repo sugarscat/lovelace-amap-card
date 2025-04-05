@@ -362,6 +362,7 @@ let AMapCard = class AMapCard extends r$3 {
         return document.createElement("amap-card-editor");
     }
     setConfig(config) {
+        console.log(config);
         this._config = config;
     }
     getCardSize() {
