@@ -1,6 +1,6 @@
 import { html, LitElement, css, nothing } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { HomeAssistant, LovelaceCard } from "custom-card-helpers";
+import { HomeAssistant, LovelaceCard, LovelaceCardEditor } from "custom-card-helpers";
 import AMapLoader from "@amap/amap-jsapi-loader";
 import { AMapCardConfig, AMapTheme } from "./types";
 import { getMapStyle } from "./utils";
@@ -9,9 +9,9 @@ import setupCustomLocalize from "./localize";
 // This puts your card into the UI card picker dialog
 (window as any).customCards = (window as any).customCards || [];
 (window as any).customCards.push({
-  type: 'amap-card',
-  name: 'AMap Card',
-  description: 'Lovelace AMap Card for Home Assistant.',
+  type: "amap-card",
+  name: "AMap Card",
+  description: "Lovelace AMap Card for Home Assistant.",
 });
 
 @customElement("amap-card")
@@ -24,7 +24,12 @@ export class AMapCard extends LitElement implements LovelaceCard {
   `;
   @property({ attribute: false }) public hass!: HomeAssistant;
   @property() private _config!: AMapCardConfig;
+
   private map?: any;
+
+  public static async getConfigElement(): Promise<LovelaceCardEditor> {
+    return document.createElement("amap-card-editor") as LovelaceCardEditor;
+  }
 
   setConfig(config: AMapCardConfig): void {
     this._config = config;

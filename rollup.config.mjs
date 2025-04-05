@@ -7,7 +7,7 @@ export default {
   input: "src/index.ts",
   output: {
     file: "dist/amap-card.js",
-    format: "cjs",
+    format: "es",
   },
   plugins: [json(), typescript(), commonjs(), nodeResolve()],
 };
