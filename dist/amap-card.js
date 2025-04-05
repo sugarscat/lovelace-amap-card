@@ -224,15 +224,6 @@ function setupCustomLocalize(hass) {
     };
 }
 
-const AMAP_CONTROLS = [
-    "ToolBar", // 缩放控件
-    "Scale", // 比例尺控件
-    "ControlBar", // 控制罗盘控件
-    "Geolocation", // 定位控件
-    "HawkEye", // 鹰眼控件
-    "MapType", // 图层切换控件
-];
-
 const defaultConfig = {
     type: "amap-card",
     Key: "",
@@ -260,62 +251,13 @@ let AMapCardEditor = class AMapCardEditor extends r$3 {
         return x `
       <div class="amap-card-editor">
         <h3>${customLocalize("editor.api.title")}</h3>
-        <ha-textfield
-          class="full-line"
-          label="${customLocalize("editor.api.key")}"
-          .value=${this._config.Key}
-          .configValue=${"key"}
-          @input=${this._valueChanged}
-        ></ha-textfield>
-        <ha-textfield
-          class="full-line"
-          label="${customLocalize("editor.api.security")}"
-          .value=${this._config.security}
-          .configValue=${"security"}
-          @input=${this._valueChanged}
-        ></ha-textfield>
-
-        <ha-expansion-panel
-          outlined
-          expanded
-          themeIcon="mdi:theme"
-          header="${customLocalize("editor.appearance.title")}"
-        >
-          <h5>${customLocalize("editor.appearance.control.title")}</h5>
-          ${AMAP_CONTROLS.map((item) => x `
-              <ha-formfield .label=${customLocalize("editor.appearance.control." + item)}>
-                <ha-checkbox
-                  .checked=${this._config.controls.includes(item)}
-                  .value=${item}
-                  @change=${this._handleControlsChange}
-                ></ha-checkbox>
-              </ha-formfield>
-            `)}
-
-          <ha-formfield label="${customLocalize("editor.appearance.traffic")}">
-            <ha-switch
-              .checked=${this._config.traffic}
-              .configValue=${"traffic"}
-              @change=${this._valueChanged}
-            ></ha-switch>
-          </ha-formfield>
-          <ha-textfield
-            label="${customLocalize("editor.appearance.zoom")}"
-            .value=${this._config.zoom}
-            .configValue=${"zoom"}
-            @input=${this._valueChanged}
-          ></ha-textfield>
-        </ha-expansion-panel>
-
-        <h3>${customLocalize("editor.entity")}</h3>
-        <ha-entity-picker
+        <label>${customLocalize("editor.api.key")}</label>
+        <ha-selector
           .hass=${this.hass}
-          .value=${this._config.entities}
-          .includeDomains=${["zone"]}
-          allow-custom-entity
-          multiple
-          @value-changed=${this._zonesChanged}
-        ></ha-entity-picker>
+          .selector=${{ text: {} }}
+          .value=${this._config.Key}
+          @value-changed=${this._valueChanged}
+        ></ha-selector>
       </div>
     `;
     }
