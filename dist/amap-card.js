@@ -273,116 +273,104 @@ let AMapCardEditor = class AMapCardEditor extends r$3 {
         return x `
       <div class="card-config">
         <h3>${customLocalize("editor.api.title")}</h3>
-        <ha-from>
-          <paper-input
-            label="${customLocalize("editor.api.key")}"
-            .value=${this._config.Key}
-            .configValue=${"Key"}
-            @input=${this._valueChanged}
-          ></paper-input>
-          <paper-input
-            label="${customLocalize("editor.api.security")}"
-            .value=${this._config.security}
-            .configValue=${"security"}
-            @input=${this._valueChanged}
-          ></paper-input>
-        </ha-from>
+        <ha-textfield
+          label="${customLocalize("editor.api.key")}"
+          .value=${this._config.Key}
+          .configValue=${"Key"}
+          @input=${this._valueChanged}
+        ></ha-textfield>
+        <ha-textfield
+          label="${customLocalize("editor.api.security")}"
+          .value=${this._config.security}
+          .configValue=${"security"}
+          @input=${this._valueChanged}
+        ></ha-textfield>
 
-        <ha-form-expandable>
-          <ha-expansion-panel
-            outlined
-            expanded
-            themeIcon="mdi:theme"
-            header="${customLocalize("editor.appearance.title")}"
-          >
-            <ha-form class="dropdown-container">
-              <ha-formfield label="${customLocalize("editor.appearance.theme.mode.auto")}">
-                <ha-select .value=${this.theTheme} @selected=${this._themeChange}>
-                  <mwc-list-item value="auto">
-                    ${customLocalize("editor.appearance.theme.options.auto")}
+        <ha-expansion-panel
+          outlined
+          expanded
+          themeIcon="mdi:theme"
+          header="${customLocalize("editor.appearance.title")}"
+        >
+          <ha-formfield label="${customLocalize("editor.appearance.theme.mode.auto")}">
+            <ha-select .value=${this.theTheme} @selected=${this._themeChange}>
+              <mwc-list-item value="auto">
+                ${customLocalize("editor.appearance.theme.options.auto")}
+              </mwc-list-item>
+              ${AMAP_THEMES.map((theme) => x `
+                  <mwc-list-item value="${theme}">
+                    ${customLocalize("editor.appearance.theme.options." + theme)}
                   </mwc-list-item>
-                  ${AMAP_THEMES.map((theme) => x `
-                      <mwc-list-item value="${theme}">
-                        ${customLocalize("editor.appearance.theme.options." + theme)}
-                      </mwc-list-item>
-                    `)}
-                </ha-select>
-              </ha-formfield>
-
-              <ha-formfield label="${customLocalize("editor.appearance.theme.mode.light")}">
-                <ha-select
-                  .value=${this._config.lightTheme}
-                  .configValue=${"lightTheme"}
-                  @selected=${this._valueChanged}
-                  ?disabled=${this.theTheme !== "auto"}
-                >
-                  ${AMAP_THEMES.map((theme) => x `
-                      <mwc-list-item value="${theme}">
-                        ${customLocalize("editor.appearance.theme.options." + theme)}
-                      </mwc-list-item>
-                    `)}
-                </ha-select>
-              </ha-formfield>
-
-              <ha-formfield label="${customLocalize("editor.appearance.theme.mode.dark")}">
-                <ha-select
-                  .value=${this._config.darkTheme}
-                  .configValue=${"darkTheme"}
-                  @selected=${this._valueChanged}
-                  ?disabled=${this.theTheme !== "auto"}
-                >
-                  ${AMAP_THEMES.map((theme) => x `
-                      <mwc-list-item value="${theme}">
-                        ${customLocalize("editor.appearance.theme.options." + theme)}
-                      </mwc-list-item>
-                    `)}
-                </ha-select>
-              </ha-formfield>
-            </ha-form>
-
-            <h4>${customLocalize("editor.appearance.control.title")}</h4>
-            <ha-from>
-              ${AMAP_CONTROLS.map((item) => x `
-                  <ha-formfield .label=${customLocalize("editor.appearance.control." + item)}>
-                    <ha-checkbox
-                      .checked=${this._config.controls.includes(item)}
-                      .value=${item}
-                      @change=${this._handleControlsChange}
-                    ></ha-checkbox>
-                  </ha-formfield>
                 `)}
-            </ha-from>
+            </ha-select>
+          </ha-formfield>
 
-            <ha-from>
-              <ha-formfield label="${customLocalize("editor.appearance.traffic")}">
-                <ha-switch
-                  .checked=${this._config.traffic}
-                  .configValue=${"traffic"}
-                  @change=${this._valueChanged}
-                ></ha-switch>
+          <ha-formfield label="${customLocalize("editor.appearance.theme.mode.light")}">
+            <ha-select
+              .value=${this._config.lightTheme}
+              .configValue=${"lightTheme"}
+              @selected=${this._valueChanged}
+              ?disabled=${this.theTheme !== "auto"}
+            >
+              ${AMAP_THEMES.map((theme) => x `
+                  <mwc-list-item value="${theme}">
+                    ${customLocalize("editor.appearance.theme.options." + theme)}
+                  </mwc-list-item>
+                `)}
+            </ha-select>
+          </ha-formfield>
+
+          <ha-formfield label="${customLocalize("editor.appearance.theme.mode.dark")}">
+            <ha-select
+              .value=${this._config.darkTheme}
+              .configValue=${"darkTheme"}
+              @selected=${this._valueChanged}
+              ?disabled=${this.theTheme !== "auto"}
+            >
+              ${AMAP_THEMES.map((theme) => x `
+                  <mwc-list-item value="${theme}">
+                    ${customLocalize("editor.appearance.theme.options." + theme)}
+                  </mwc-list-item>
+                `)}
+            </ha-select>
+          </ha-formfield>
+
+          <h4>${customLocalize("editor.appearance.control.title")}</h4>
+          ${AMAP_CONTROLS.map((item) => x `
+              <ha-formfield .label=${customLocalize("editor.appearance.control." + item)}>
+                <ha-checkbox
+                  .checked=${this._config.controls.includes(item)}
+                  .value=${item}
+                  @change=${this._handleControlsChange}
+                ></ha-checkbox>
               </ha-formfield>
-              <ha-formfield label="${customLocalize("editor.appearance.zoom")}">
-                <paper-input
-                  .value=${this._config.zoom}
-                  .configValue=${"zoom"}
-                  @input=${this._valueChanged}
-                ></paper-input>
-              </ha-formfield>
-            </ha-from>
-          </ha-expansion-panel>
-        </ha-form-expandable>
+            `)}
+
+          <ha-formfield label="${customLocalize("editor.appearance.traffic")}">
+            <ha-switch
+              .checked=${this._config.traffic}
+              .configValue=${"traffic"}
+              @change=${this._valueChanged}
+            ></ha-switch>
+          </ha-formfield>
+          <ha-formfield label="${customLocalize("editor.appearance.zoom")}">
+            <ha-textfield
+              .value=${this._config.zoom}
+              .configValue=${"zoom"}
+              @input=${this._valueChanged}
+            ></ha-textfield>
+          </ha-formfield>
+        </ha-expansion-panel>
 
         <h3>${customLocalize("editor.entity")}</h3>
-        <hui-entity-editor>
-          <ha-entity-picker
-            .hass=${this.hass}
-            .value=${this._config.entities}
-            .includeDomains=${["zone"]}
-            allow-custom-entity
-            multiple
-            @value-changed=${this._zonesChanged}
-          ></ha-entity-picker>
-        </hui-entity-editor>
+        <ha-entity-picker
+          .hass=${this.hass}
+          .value=${this._config.entities}
+          .includeDomains=${["zone"]}
+          allow-custom-entity
+          multiple
+          @value-changed=${this._zonesChanged}
+        ></ha-entity-picker>
       </div>
     `;
     }
