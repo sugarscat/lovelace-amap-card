@@ -79,7 +79,7 @@ var t,r;!function(e){e.language="language",e.system="system",e.comma_decimal="co
 var card$1 = {
 	not_found: "Entity not found",
 	config_not_found: "Configuration not found",
-	Key_not_found: "AMap Key or Security code not configured"
+	Key_not_found: "AMap Key or Security key not configured"
 };
 var editor$1 = {
 	title: "Title",
@@ -140,7 +140,7 @@ var en$1 = /*#__PURE__*/Object.freeze({
 var card = {
 	not_found: "未找到实体",
 	config_not_found: "未找到配置",
-	Key_not_found: "未配置高德地图密钥或安全代码"
+	Key_not_found: "未配置高德地图密钥或安全密钥"
 };
 var editor = {
 	title: "标题",
@@ -273,19 +273,19 @@ let AMapCardEditor = class AMapCardEditor extends r$3 {
         return x `
       <div class="card-config">
         <h3>${customLocalize("editor.api.title")}</h3>
-        <ha-textfield
+        <ha-textfield class="full-line"
           label="${customLocalize("editor.api.key")}"
           .value=${this._config.Key}
           .configValue=${"Key"}
           @input=${this._valueChanged}
         ></ha-textfield>
-        <ha-textfield
+        <ha-textfield class="full-line"
           label="${customLocalize("editor.api.security")}"
           .value=${this._config.security}
           .configValue=${"security"}
           @input=${this._valueChanged}
         ></ha-textfield>
-
+        <br>
         <ha-expansion-panel
           outlined
           expanded
@@ -353,13 +353,12 @@ let AMapCardEditor = class AMapCardEditor extends r$3 {
               @change=${this._valueChanged}
             ></ha-switch>
           </ha-formfield>
-          <ha-formfield label="${customLocalize("editor.appearance.zoom")}">
-            <ha-textfield
-              .value=${this._config.zoom}
-              .configValue=${"zoom"}
-              @input=${this._valueChanged}
-            ></ha-textfield>
-          </ha-formfield>
+          <ha-textfield
+            label="${customLocalize("editor.appearance.zoom")}"
+            .value=${this._config.zoom}
+            .configValue=${"zoom"}
+            @input=${this._valueChanged}
+          ></ha-textfield>
         </ha-expansion-panel>
 
         <h3>${customLocalize("editor.entity")}</h3>
@@ -377,9 +376,11 @@ let AMapCardEditor = class AMapCardEditor extends r$3 {
     _valueChanged(ev) {
         const target = ev.target;
         const configValue = target.getAttribute("configValue");
+        console.log(configValue);
         if (!configValue)
             return;
         const newValue = target.type === "checkbox" ? target.checked : target.value;
+        console.log(newValue);
         if (newValue === undefined || newValue === null)
             return;
         if (!this._config || this._config[configValue] === newValue)
@@ -422,6 +423,11 @@ let AMapCardEditor = class AMapCardEditor extends r$3 {
         ne(this, "config-changed", { config: this._config });
     }
 };
+AMapCardEditor.styles = i$3 `
+    .full-line {
+      width: 100%;
+    }
+  `;
 __decorate([
     n({ attribute: false })
 ], AMapCardEditor.prototype, "hass", void 0);
