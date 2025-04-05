@@ -86,6 +86,7 @@ var editor$1 = {
 		label: "Title"
 	},
 	api: {
+		label: "API Deployment",
 		key: {
 			label: "Key"
 		},
@@ -157,6 +158,7 @@ var editor = {
 		label: "标题"
 	},
 	api: {
+		label: "API 配置",
 		key: {
 			label: "Key"
 		},
@@ -291,16 +293,16 @@ let AMapCardEditor = class AMapCardEditor extends r$3 {
             return E;
         const customLocalize = setupCustomLocalize(this.hass);
         return x `
-      <ha-form class="card-config">
-        <ha-formfield label="${customLocalize("editor.entity.label")}">
+      <div class="card-config">
+        <ha-formfield label="${customLocalize("editor.api.label")}">
           <paper-input
-            label="${customLocalize("editor.key.label")}"
+            label="${customLocalize("editor.api.key.label")}"
             .value=${this._config.Key}
             .configValue=${"Key"}
             @input=${this._valueChanged}
           ></paper-input>
           <paper-input
-            label="${customLocalize("editor.security.label")}"
+            label="${customLocalize("editor.api.security.label")}"
             .value=${this._config.security}
             .configValue=${"security"}
             @input=${this._valueChanged}
@@ -388,7 +390,7 @@ let AMapCardEditor = class AMapCardEditor extends r$3 {
             @value-changed=${this._zonesChanged}
           ></ha-entity-picker>
         </ha-formfield>
-      </ha-form>
+      </div>
     `;
     }
     _valueChanged(ev) {
