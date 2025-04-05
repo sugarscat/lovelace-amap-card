@@ -253,16 +253,16 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
         return x `
       <div class="card-config">
         <h3>${customLocalize("editor.api.title")}</h3>
-        <ha-selector
-          name="${customLocalize("editor.api.key")}"
+        <ha-selector class="ha-selector"
+          .name="${customLocalize("editor.api.key")}"
           .hass=${this.hass}
           .selector=${{ text: {} }}
           .value=${this._config.key || ""}
           @value-changed=${(e) => this._updateConfig("key", e.detail.value)}
         >
         </ha-selector>
-        <ha-selector
-          name="${customLocalize("editor.api.security")}"
+        <ha-selector class="ha-selector"
+          .name="${customLocalize("editor.api.security")}"
           .hass=${this.hass}
           .selector=${{ text: {} }}
           .value=${this._config.security || ""}
@@ -272,7 +272,7 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
 
         <h3>${customLocalize("editor.appearance.title")}</h3>
         <label>${customLocalize("editor.appearance.theme.mode.light")}</label>
-        <ha-selector
+        <ha-selector class="ha-selector"
           .hass=${this.hass}
           .selector=${{
             select: {
@@ -285,10 +285,11 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
         </ha-selector>
 
         <label>${customLocalize("editor.appearance.theme.mode.dark")}</label>
-        <ha-selector
+        <ha-selector class="ha-selector"
           .hass=${this.hass}
           .selector=${{
             select: {
+                type: "select",
                 options: AMAP_THEMES.map((item) => [item, customLocalize("editor.api." + item)]),
             },
         }}
@@ -298,7 +299,7 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
         </ha-selector>
 
         <label>${customLocalize("editor.appearance.viewMode")}</label>
-        <ha-selector
+        <ha-selector class="ha-selector"
           .hass=${this.hass}
           .selector=${{ select: { options: ["2D", "3D"] } }}
           .value=${this._config.viewMode}
@@ -307,7 +308,7 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
         </ha-selector>
 
         <label>${customLocalize("editor.appearance.traffic")}</label>
-        <ha-selector
+        <ha-selector class="ha-selector"
           .hass=${this.hass}
           .selector=${{ boolean: {} }}
           .value=${this._config.traffic ?? false}
@@ -316,10 +317,11 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
         </ha-selector>
 
         <label>${customLocalize("editor.appearance.control")}</label>
-        <ha-selector
+        <ha-selector class="ha-selector"
           .hass=${this.hass}
           .selector=${{
             select: {
+                type: "select",
                 multiple: true,
                 options: AMAP_CONTROLS.map((item) => [
                     item,
@@ -333,7 +335,7 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
         </ha-selector>
 
         <label>${customLocalize("editor.appearance.zoom")}</label>
-        <ha-selector
+        <ha-selector class="ha-selector"
           .hass=${this.hass}
           .selector=${{
             number: {
@@ -349,7 +351,7 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
         </ha-selector>
 
         <h3>${customLocalize("editor.entity")}</h3>
-        <ha-selector
+        <ha-selector class="ha-selector"
           .hass=${this.hass}
           .selector=${{ entity: { multiple: true, domain: "zone" } }}
           .value=${this._config.entities}
