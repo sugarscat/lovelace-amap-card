@@ -237,10 +237,6 @@ const defaultConfig = {
     entities: [],
 };
 let AMapCardEditor = class AMapCardEditor extends r$3 {
-    constructor() {
-        super(...arguments);
-        this.theTheme = "auto";
-    }
     setConfig(config) {
         this._config = { ...defaultConfig, ...config };
     }
@@ -248,44 +244,37 @@ let AMapCardEditor = class AMapCardEditor extends r$3 {
         if (!this.hass || !this._config)
             return E;
         const customLocalize = setupCustomLocalize(this.hass);
-        const slot = "card-editor";
-        const info = {
-            schema: [
-                {
-                    type: "string",
-                    name: customLocalize("editor.api.security.key"),
-                    required: true,
-                },
-                {
-                    type: "string",
-                    name: customLocalize("editor.api.security.security"),
-                    required: true,
-                },
-                {
-                    type: "integer",
-                    name: customLocalize("editor.appearance.zoom"),
-                    default: 15,
-                },
-                {
-                    type: "boolean",
-                    name: customLocalize("editor.appearance.traffic"),
-                    default: false,
-                },
-                {
-                    name: customLocalize("editor.entity"),
-                    selector: { entity: { multiple: true } },
-                },
-            ],
-            error: undefined,
-        };
+        const schema = [
+            {
+                type: "string",
+                name: customLocalize("editor.api.security.key"),
+                required: true,
+            },
+            {
+                type: "string",
+                name: customLocalize("editor.api.security.security"),
+                required: true,
+            },
+            {
+                type: "integer",
+                name: customLocalize("editor.appearance.zoom"),
+                default: 15,
+            },
+            {
+                type: "boolean",
+                name: customLocalize("editor.appearance.traffic"),
+                default: false,
+            },
+            {
+                name: customLocalize("editor.entity"),
+                selector: { entity: { multiple: true } },
+            },
+        ];
         return x `
       <ha-from
-        slot=${slot}
         .hass=${this.hass}
         .data=${this._config}
-        .schema=${info.schema}
-        .error=${info.error}
-        .computeError="${(error) => error}"
+        .schema=${schema}
         .computeLabel="${(schema) => schema.name}"
         @value-changed=${this._handleValueChanged}
       >
@@ -295,24 +284,6 @@ let AMapCardEditor = class AMapCardEditor extends r$3 {
     _handleValueChanged(ev) {
         console.log(ev);
         ne(this, "config-changed", { config: this._config });
-    }
-    _zonesChanged(ev) {
-        this._config = {
-            ...this._config,
-            entities: ev.detail.value,
-        };
-        ne(this, "config-changed", { config: this._config });
-    }
-    _themeChange(ev) {
-        this.theTheme = ev.detail.value;
-        if (this.theTheme !== "auto") {
-            this._config = {
-                ...this._config,
-                lightTheme: this.theTheme,
-                darkTheme: this.theTheme,
-            };
-            ne(this, "config-changed", { config: this._config });
-        }
     }
     _handleControlsChange(e) {
         const checkbox = e.target;
@@ -339,9 +310,6 @@ __decorate([
 __decorate([
     r$1()
 ], AMapCardEditor.prototype, "_config", void 0);
-__decorate([
-    r$1()
-], AMapCardEditor.prototype, "theTheme", void 0);
 AMapCardEditor = __decorate([
     t$1("amap-card-editor")
 ], AMapCardEditor);
