@@ -242,9 +242,24 @@ function setupCustomLocalize(hass) {
     };
 }
 
+const defaultConfig = {
+    key: "",
+    type: "",
+    security: "",
+    lightTheme: "normal",
+    darkTheme: "dark",
+    controls: ["ToolBar", "Geolocation"],
+    traffic: false,
+    viewMode: "2D",
+    zoom: 15,
+    entities: [],
+};
 let AMapCardEditor = class AMapCardEditor extends r$2 {
     setConfig(config) {
-        this._config = config;
+        this._config = {
+            ...defaultConfig,
+            ...config,
+        };
     }
     render() {
         if (!this.hass || !this._config)
@@ -256,14 +271,12 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
                 selector: { text: {} },
                 required: true,
                 label: customLocalize("editor.api.key"),
-                value: this._config.key || "",
             },
             {
                 name: "security",
                 selector: { text: {} },
                 required: true,
                 label: customLocalize("editor.api.security"),
-                value: this._config.security || "",
             },
             {
                 name: "lightTheme",
@@ -273,7 +286,6 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
                     customLocalize("editor.appearance.theme.options." + item),
                 ]),
                 label: customLocalize("editor.appearance.theme.mode.light"),
-                value: this._config.lightTheme || "normal",
             },
             {
                 name: "darkTheme",
@@ -283,7 +295,6 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
                     customLocalize("editor.appearance.theme.options." + item),
                 ]),
                 label: customLocalize("editor.appearance.theme.mode.dark"),
-                value: this._config.darkTheme || "dark",
             },
             {
                 name: "controls",
@@ -293,19 +304,16 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
                     return acc;
                 }, {}),
                 label: customLocalize("editor.appearance.control.title"),
-                value: this._config.controls || ["ToolBar", "Geolocation"],
             },
             {
                 name: "viewMode",
                 selector: { select: { options: ["2D", "3D"] } },
                 label: customLocalize("editor.appearance.viewMode"),
-                value: this._config.viewMode || "2D",
             },
             {
                 name: "traffic",
                 selector: { boolean: {} },
                 label: customLocalize("editor.appearance.traffic"),
-                value: this._config.traffic ?? false,
             },
             {
                 name: "zoom",
@@ -313,13 +321,11 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
                     number: { min: 3, max: 20, step: 1, mode: "slider" },
                 },
                 label: customLocalize("editor.appearance.zoom"),
-                value: this._config.zoom || 12,
             },
             {
                 name: "entities",
                 selector: { entity: { multiple: true, domain: "zone" } },
                 label: customLocalize("editor.entity"),
-                value: this._config.entities || [],
             },
         ];
         return x `
@@ -387,7 +393,6 @@ function getMapStyle(theme) {
     return "amap://styles/" + theme;
 }
 function getMapControls(controls) {
-    // "AMap." + control，并以,分隔;
     return controls.map((control) => "AMap." + control);
 }
 
@@ -441,14 +446,20 @@ let AMapCard = class AMapCard extends r$2 {
                 key: this._config.key,
                 version: "2.0",
                 plugins: getMapControls(this._config.controls),
-                Loca: { version: "2.0" },
             });
             this.map = new AMap.Map(this.shadowRoot.getElementById("amap"), {
                 viewMode: this._config.viewMode,
                 zoom: this._config.zoom,
                 mapStyle: getMapStyle(this._getTheme()),
                 showTraffic: this._config.traffic,
+                center: [116.397428, 39.90923], //地图中心点
             });
+            // 添加控件
+            if (this._config.controls.length > 0) {
+                this._config.controls.forEach((control) => {
+                    this.map.addControl(new AMap[control]());
+                });
+            }
             // 添加实体
             // this._config.entities.forEach((entityId) => {
             //   const stateObj = this.hass!.states[entityId];
@@ -477,7 +488,7 @@ AMapCard.styles = i$3 `
     }
     #amap {
       width: 100%;
-      height: 100%;
+      height: 100vh;
     }
     .amap-logo {
       display: none !important;
