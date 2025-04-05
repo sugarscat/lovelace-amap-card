@@ -242,9 +242,24 @@ function setupCustomLocalize(hass) {
     };
 }
 
+const defaultConfig = {
+    key: "",
+    type: "",
+    security: "",
+    lightTheme: "normal",
+    darkTheme: "dark",
+    controls: ["ToolBar", "Geolocation"],
+    traffic: false,
+    viewMode: "2D",
+    zoom: 15,
+    entities: []
+};
 let AMapCardEditor = class AMapCardEditor extends r$2 {
     setConfig(config) {
-        this._config = config;
+        this._config = {
+            ...defaultConfig,
+            ...config,
+        };
     }
     render() {
         if (!this.hass || !this._config)
@@ -272,7 +287,6 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
                     item,
                     customLocalize("editor.appearance.theme.options." + item),
                 ]),
-                default: "normal",
                 label: customLocalize("editor.appearance.theme.mode.light"),
                 value: this._config.lightTheme || "",
             },
@@ -283,7 +297,6 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
                     item,
                     customLocalize("editor.appearance.theme.options." + item),
                 ]),
-                default: "dark",
                 label: customLocalize("editor.appearance.theme.mode.dark"),
                 value: this._config.darkTheme || "",
             },
