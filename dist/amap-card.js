@@ -248,45 +248,52 @@ let AMapCardEditor = class AMapCardEditor extends r$3 {
         if (!this.hass || !this._config)
             return E;
         const customLocalize = setupCustomLocalize(this.hass);
+        const slot = "card-editor";
+        const info = {
+            schema: [
+                {
+                    type: "string",
+                    name: customLocalize("editor.api.security.key"),
+                    required: true,
+                },
+                {
+                    type: "string",
+                    name: customLocalize("editor.api.security.security"),
+                    required: true,
+                },
+                {
+                    type: "integer",
+                    name: customLocalize("editor.appearance.zoom"),
+                    default: 15,
+                },
+                {
+                    type: "boolean",
+                    name: customLocalize("editor.appearance.traffic"),
+                    default: false,
+                },
+                {
+                    name: customLocalize("editor.entity"),
+                    selector: { entity: { multiple: true } },
+                },
+            ],
+            error: undefined,
+        };
         return x `
-      <ha-from>
-        <h3>${customLocalize("editor.api.title")}</h3>
-        <ha-selector
-          configValue="key"
-          .lable="${customLocalize("editor.api.key")}"
-          .hass=${this.hass}
-          .selector=${{ text: {} }}
-          .value=${this._config.Key}
-          @value-changed=${this._valueChanged}
-        ></ha-selector>
-        <ha-selector
-          configValue="security"
-          lable="${customLocalize("editor.api.security")}"
-          .hass=${this.hass}
-          .selector=${{ text: {} }}
-          .value=${this._config.security}
-          @value-changed=${this._valueChanged}
-        ></ha-selector>
+      <ha-from
+        slot=${slot}
+        .hass=${this.hass}
+        .data=${this._config}
+        .schema=${info.schema}
+        .error=${info.error}
+        .computeError="${(error) => error}"
+        .computeLabel="${(schema) => schema.name}"
+        @value-changed=${this._handleValueChanged}
+      >
       </ha-from>
-      
     `;
     }
-    _valueChanged(ev) {
-        const target = ev.target;
-        console.log(target);
-        const configValue = target.getAttribute("configValue");
-        console.log(configValue);
-        if (!configValue)
-            return;
-        const newValue = target.type === "checkbox" ? target.checked : target.value;
-        if (newValue === undefined || newValue === null)
-            return;
-        if (!this._config || this._config[configValue] === newValue)
-            return;
-        this._config = {
-            ...this._config,
-            [configValue]: newValue,
-        };
+    _handleValueChanged(ev) {
+        console.log(ev);
         ne(this, "config-changed", { config: this._config });
     }
     _zonesChanged(ev) {
