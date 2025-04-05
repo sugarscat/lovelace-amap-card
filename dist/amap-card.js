@@ -261,15 +261,16 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
             {
                 name: "security",
                 selector: { text: {} },
+                required: true,
                 label: customLocalize("editor.api.security"),
                 value: this._config.security || "",
             },
             {
                 name: "lightTheme",
                 selector: {
-                    select: {
-                        options: AMAP_THEMES.map((item) => [item, customLocalize("editor.api." + item)]),
-                    },
+                    type: "select",
+                    options: AMAP_THEMES.map((item) => [item, customLocalize("editor.api." + item)]),
+                    default: "normal",
                 },
                 label: customLocalize("editor.appearance.theme.mode.light"),
                 value: this._config.lightTheme || "",
@@ -277,9 +278,9 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
             {
                 name: "darkTheme",
                 selector: {
-                    select: {
-                        options: AMAP_THEMES.map((item) => [item, customLocalize("editor.api." + item)]),
-                    },
+                    type: "select",
+                    options: AMAP_THEMES.map((item) => [item, customLocalize("editor.api." + item)]),
+                    default: "normal",
                 },
                 label: customLocalize("editor.appearance.theme.mode.dark"),
                 value: this._config.darkTheme || "",
@@ -299,13 +300,12 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
             {
                 name: "controls",
                 selector: {
-                    select: {
-                        multiple: true,
-                        options: AMAP_CONTROLS.map((item) => [
-                            item,
-                            customLocalize("editor.appearance.control." + item),
-                        ]),
-                    },
+                    type: "select",
+                    multiple: true,
+                    options: AMAP_CONTROLS.map((item) => [
+                        item,
+                        customLocalize("editor.appearance.control." + item),
+                    ]),
                 },
                 label: customLocalize("editor.appearance.control"),
                 value: this._config.controls || [],
@@ -331,6 +331,7 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
           .hass=${this.hass}
           .schema=${schema}
           .data=${this._config}
+          .computeLabel=${(schema) => schema.label}
           @value-changed=${this._handleValueChanged}
         ></ha-form>
       </div>
@@ -338,17 +339,13 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
     }
     _handleValueChanged(ev) {
         const updatedValue = ev.detail.value;
-        console.log(ev, updatedValue);
-        // const key = ev.target!.name!;
-        // this._config = {
-        //   ...this._config!,
-        //   [key]: updatedValue,
-        // };
-        // this.dispatchEvent(
-        //   new CustomEvent("config-changed", {
-        //     detail: { config: this._config },
-        //   })
-        // );
+        this._config = {
+            ...this._config,
+            updatedValue,
+        };
+        this.dispatchEvent(new CustomEvent("config-changed", {
+            detail: { config: this._config },
+        }));
     }
 };
 AMapCardEditor.styles = i$3 `
