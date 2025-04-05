@@ -278,6 +278,13 @@ function setupCustomLocalize(hass) {
     };
 }
 
+// This puts your card into the UI card picker dialog
+window.customCards = window.customCards || [];
+window.customCards.push({
+    type: 'amap-card',
+    name: 'AMap Card',
+    description: 'Lovelace AMap Card for Home Assistant.',
+});
 let AMapCard = class AMapCard extends r$3 {
     setConfig(config) {
         this._config = config;

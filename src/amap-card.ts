@@ -6,6 +6,14 @@ import { AMapCardConfig, AMapTheme } from "./types";
 import { getMapStyle } from "./utils";
 import setupCustomLocalize from "./localize";
 
+// This puts your card into the UI card picker dialog
+(window as any).customCards = (window as any).customCards || [];
+(window as any).customCards.push({
+  type: 'amap-card',
+  name: 'AMap Card',
+  description: 'Lovelace AMap Card for Home Assistant.',
+});
+
 @customElement("amap-card")
 export class AMapCard extends LitElement implements LovelaceCard {
   static styles = css`
