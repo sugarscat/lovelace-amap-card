@@ -224,19 +224,6 @@ function setupCustomLocalize(hass) {
     };
 }
 
-const AMAP_THEMES = [
-    "normal", // 标准
-    "dark", // 幻影黑
-    "light", // 月光银
-    "whitesmoke", // 远山黛
-    "fresh", // 草色青
-    "grey", // 雅士灰
-    "graffiti", // 涂鸦
-    "macaron", // 马卡龙
-    "blue", // 靛青蓝
-    "darkblue", // 极夜蓝
-    "wine", // 酱籽
-];
 const AMAP_CONTROLS = [
     "ToolBar", // 缩放控件
     "Scale", // 比例尺控件
@@ -271,71 +258,32 @@ let AMapCardEditor = class AMapCardEditor extends r$3 {
             return E;
         const customLocalize = setupCustomLocalize(this.hass);
         return x `
-      <div class="card-config">
-        <h3>${customLocalize("editor.api.title")}</h3>
-        <ha-textfield class="full-line"
+      <h3>${customLocalize("editor.api.title")}</h3>
+      <ha-from>
+        <ha-textfield
+          class="full-line"
           label="${customLocalize("editor.api.key")}"
           .value=${this._config.Key}
           .configValue=${"Key"}
           @input=${this._valueChanged}
         ></ha-textfield>
-        <ha-textfield class="full-line"
+        <ha-textfield
+          class="full-line"
           label="${customLocalize("editor.api.security")}"
           .value=${this._config.security}
           .configValue=${"security"}
           @input=${this._valueChanged}
         ></ha-textfield>
-        <br>
-        <ha-expansion-panel
-          outlined
-          expanded
-          themeIcon="mdi:theme"
-          header="${customLocalize("editor.appearance.title")}"
-        >
-          <ha-formfield label="${customLocalize("editor.appearance.theme.mode.auto")}">
-            <ha-select .value=${this.theTheme} @selected=${this._themeChange}>
-              <mwc-list-item value="auto">
-                ${customLocalize("editor.appearance.theme.options.auto")}
-              </mwc-list-item>
-              ${AMAP_THEMES.map((theme) => x `
-                  <mwc-list-item value="${theme}">
-                    ${customLocalize("editor.appearance.theme.options." + theme)}
-                  </mwc-list-item>
-                `)}
-            </ha-select>
-          </ha-formfield>
+      </ha-from>
 
-          <ha-formfield label="${customLocalize("editor.appearance.theme.mode.light")}">
-            <ha-select
-              .value=${this._config.lightTheme}
-              .configValue=${"lightTheme"}
-              @selected=${this._valueChanged}
-              ?disabled=${this.theTheme !== "auto"}
-            >
-              ${AMAP_THEMES.map((theme) => x `
-                  <mwc-list-item value="${theme}">
-                    ${customLocalize("editor.appearance.theme.options." + theme)}
-                  </mwc-list-item>
-                `)}
-            </ha-select>
-          </ha-formfield>
-
-          <ha-formfield label="${customLocalize("editor.appearance.theme.mode.dark")}">
-            <ha-select
-              .value=${this._config.darkTheme}
-              .configValue=${"darkTheme"}
-              @selected=${this._valueChanged}
-              ?disabled=${this.theTheme !== "auto"}
-            >
-              ${AMAP_THEMES.map((theme) => x `
-                  <mwc-list-item value="${theme}">
-                    ${customLocalize("editor.appearance.theme.options." + theme)}
-                  </mwc-list-item>
-                `)}
-            </ha-select>
-          </ha-formfield>
-
-          <h4>${customLocalize("editor.appearance.control.title")}</h4>
+      <ha-expansion-panel
+        outlined
+        expanded
+        themeIcon="mdi:theme"
+        header="${customLocalize("editor.appearance.title")}"
+      >
+        <div class="side-by-side">
+          <h5>${customLocalize("editor.appearance.control.title")}</h5>
           ${AMAP_CONTROLS.map((item) => x `
               <ha-formfield .label=${customLocalize("editor.appearance.control." + item)}>
                 <ha-checkbox
@@ -345,7 +293,6 @@ let AMapCardEditor = class AMapCardEditor extends r$3 {
                 ></ha-checkbox>
               </ha-formfield>
             `)}
-
           <ha-formfield label="${customLocalize("editor.appearance.traffic")}">
             <ha-switch
               .checked=${this._config.traffic}
@@ -359,18 +306,18 @@ let AMapCardEditor = class AMapCardEditor extends r$3 {
             .configValue=${"zoom"}
             @input=${this._valueChanged}
           ></ha-textfield>
-        </ha-expansion-panel>
+        </div>
+      </ha-expansion-panel>
 
-        <h3>${customLocalize("editor.entity")}</h3>
-        <ha-entity-picker
-          .hass=${this.hass}
-          .value=${this._config.entities}
-          .includeDomains=${["zone"]}
-          allow-custom-entity
-          multiple
-          @value-changed=${this._zonesChanged}
-        ></ha-entity-picker>
-      </div>
+      <h3>${customLocalize("editor.entity")}</h3>
+      <ha-entity-picker
+        .hass=${this.hass}
+        .value=${this._config.entities}
+        .includeDomains=${["zone"]}
+        allow-custom-entity
+        multiple
+        @value-changed=${this._zonesChanged}
+      ></ha-entity-picker>
     `;
     }
     _valueChanged(ev) {
@@ -426,6 +373,16 @@ let AMapCardEditor = class AMapCardEditor extends r$3 {
 AMapCardEditor.styles = i$3 `
     .full-line {
       width: 100%;
+    }
+
+    .side-by-side {
+      display: flex;
+      align-items: flex-end;
+      flex-wrap: wrap;
+    }
+    .side-by-side > * {
+      flex: 1;
+      padding-right: 4px;
     }
   `;
 __decorate([
