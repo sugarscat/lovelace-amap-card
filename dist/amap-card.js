@@ -252,22 +252,23 @@ let AMapCardEditor = class AMapCardEditor extends r$3 {
       <ha-from>
         <h3>${customLocalize("editor.api.title")}</h3>
         <ha-selector
-          lable="${customLocalize("editor.api.key")}"
-          .configValue="key"
+          configValue="key"
+          .lable="${customLocalize("editor.api.key")}"
           .hass=${this.hass}
           .selector=${{ text: {} }}
           .value=${this._config.Key}
           @value-changed=${this._valueChanged}
         ></ha-selector>
         <ha-selector
+          configValue="security"
           lable="${customLocalize("editor.api.security")}"
-          .configValue="security"
           .hass=${this.hass}
           .selector=${{ text: {} }}
           .value=${this._config.security}
           @value-changed=${this._valueChanged}
         ></ha-selector>
       </ha-from>
+      
     `;
     }
     _valueChanged(ev) {
