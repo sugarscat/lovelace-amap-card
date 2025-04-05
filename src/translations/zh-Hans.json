@@ -1,30 +1,24 @@
 {
   "card": {
     "not_found": "未找到实体",
-    "config_not_found": "未找到配置"
+    "config_not_found": "未找到配置",
+    "Key_not_found": "未配置高德地图密钥或安全密钥"
   },
   "editor": {
-    "title": {
-      "label": "标题"
-    },
+    "title": "标题",
     "api": {
-      "key": {
-        "label": "Key"
-      },
-      "security": {
-        "label": "Security Key"
-      }
+      "title": "API 配置",
+      "key": "Key",
+      "security": "Security Key"
     },
     "appearance": {
-      "label": "外观",
+      "title": "外观",
       "theme": {
         "mode": {
-          "auto": "主题模式",
-          "light": "亮色主题",
-          "dark": "深色主题"
+          "light": "白天主题",
+          "dark": "暗色主题"
         },
         "options": {
-          "auto": "自动",
           "normal": "标准",
           "dark": "幻影黑",
           "light": "月光银",
@@ -38,23 +32,19 @@
           "wine": "酱籽"
         }
       },
-      "zoom": {
-        "label": "缩放"
-      },
+      "viewMode": "视图模式",
+      "zoom": "缩放",
+      "traffic": "路况",
       "control": {
-        "label": "控件",
-        "options": {
-          "ToolBar": "缩放控件",
-          "Scale": "比例尺控件",
-          "ControlBar": "控制罗盘控件",
-          "Geolocation": "定位控件",
-          "HawkEye": "鹰眼控件",
-          "MapType": "图层切换控件"
-        }
+        "title": "控件",
+        "ToolBar": "缩放控件",
+        "Scale": "比例尺控件",
+        "ControlBar": "控制罗盘控件",
+        "Geolocation": "定位控件",
+        "HawkEye": "鹰眼控件",
+        "MapType": "图层切换控件"
       }
     },
-    "entity": {
-      "label": "实体"
-    }
+    "entity": "实体"
   }
 }

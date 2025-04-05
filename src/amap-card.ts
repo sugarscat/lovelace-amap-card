@@ -11,15 +11,21 @@ import setupCustomLocalize from "./localize";
 (window as any).customCards.push({
   type: "amap-card",
   name: "AMap Card",
-  description: "Lovelace AMap Card for Home Assistant.",
+  description: "AMap Card | 高德地图卡片",
 });
 
 @customElement("amap-card")
 export class AMapCard extends LitElement implements LovelaceCard {
   static styles = css`
+    .amap-card {
+      overflow: hidden;
+    }
     #amap {
       width: 100%;
-      height: 400px;
+      height: 100%;
+    }
+    .amap-logo {
+      display: none !important;
     }
   `;
   @property({ attribute: false }) public hass!: HomeAssistant;
@@ -47,18 +53,25 @@ export class AMapCard extends LitElement implements LovelaceCard {
     if (!this.hass) {
       return nothing;
     }
+
+    const customLocalize = setupCustomLocalize(this.hass);
     if (!this._config) {
-      const customLocalize = setupCustomLocalize(this.hass);
-      return html`<ha-alert alert-type="error"
-        >${customLocalize("card.config_not_found")}</ha-alert
-      >`;
+      return html`<ha-card>
+        <ha-alert alert-type="error">${customLocalize("card.config_not_found")}</ha-alert>
+      </ha-card>`;
     }
-    return html`<div id="amap"></div>`;
+    if (!this._config.key || !this._config.security) {
+      return html`<ha-card>
+        <ha-alert alert-type="error">${customLocalize("card.Key_not_found")}</ha-alert>
+      </ha-card>`;
+    }
+
+    return html`<ha-card class="amap-card"><div id="amap"></div></ha-card>`;
   }
 
   private async _loadMap() {
-    if (!this._config.Key || !this._config.security) {
-      console.error("AMap Key or Security code not configured");
+    if (!this._config.key || !this._config.security) {
+      console.info("AMap Key or Security code not configured");
       return;
     }
 
@@ -68,7 +81,7 @@ export class AMapCard extends LitElement implements LovelaceCard {
 
     try {
       const AMap = await AMapLoader.load({
-        key: this._config.Key,
+        key: this._config.key,
         version: "2.0",
         plugins: this._config.controls,
         Loca: { version: "2.0" },

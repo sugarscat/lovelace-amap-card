@@ -2,6 +2,8 @@
 
 Lovelace AMap Card for Home Assistant.
 
+> Home Assistant 的高德地图卡片。
+
 ## Getting Started
 
 ## Acknowledgments

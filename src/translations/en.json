@@ -1,30 +1,24 @@
 {
   "card": {
     "not_found": "Entity not found",
-    "config_not_found": "Configuration not found"
+    "config_not_found": "Configuration not found",
+    "Key_not_found": "AMap Key or Security key not configured"
   },
   "editor": {
-    "title": {
-      "label": "Title"
-    },
+    "title": "Title",
     "api": {
-      "key": {
-        "label": "Key"
-      },
-      "security": {
-        "label": "Security Key"
-      }
+      "title": "API Deployment",
+      "key": "Key",
+      "security": "Security Key"
     },
     "appearance": {
-      "label": "Appearance",
+      "title": "Appearance",
       "theme": {
         "mode": {
-          "auto": "Theme Mode",
-          "light": "Light Theme",
+          "light": "Daytime Theme",
           "dark": "Dark Theme"
         },
         "options": {
-          "auto": "Auto",
           "normal": "Normal",
           "dark": "Dark",
           "light": "Light",
@@ -38,23 +32,19 @@
           "wine": "Wine"
         }
       },
-      "zoom": {
-        "label": "Zoom"
-      },
+      "viewMode": "View Mode",
+      "zoom": "Zoom",
+      "traffic": "Road Condition",
       "control": {
-        "label": "Control",
-        "options": {
-          "ToolBar": "Zoom Control",
-          "Scale": "Scale Control",
-          "ControlBar": "Compass Control",
-          "Geolocation": "Location Control",
-          "HawkEye": "Overview Control",
-          "MapType": "Map Type Control"
-        }
+        "title": "Control",
+        "ToolBar": "Zoom Control",
+        "Scale": "Scale Control",
+        "ControlBar": "Compass Control",
+        "Geolocation": "Location Control",
+        "HawkEye": "Overview Control",
+        "MapType": "Map Type Control"
       }
     },
-    "entity": {
-      "label": "Entity"
-    }
+    "entity": "Entity"
   }
 }
