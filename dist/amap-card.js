@@ -99,7 +99,7 @@ const AMAP_CONTROLS = [
 var card$1 = {
 	not_found: "Entity not found",
 	config_not_found: "Configuration not found",
-	Key_not_found: "AMap Key or Security key not configured"
+	Key_not_found: "No key or security key is configured for AMap"
 };
 var editor$1 = {
 	title: "Title",
@@ -159,14 +159,14 @@ var en$1 = /*#__PURE__*/Object.freeze({
 var card = {
 	not_found: "未找到实体",
 	config_not_found: "未找到配置",
-	Key_not_found: "未配置高德地图密钥或安全密钥"
+	Key_not_found: "未配置高德地图的 Key 或安全密钥"
 };
 var editor = {
 	title: "标题",
 	api: {
 		title: "API 配置",
 		key: "Key",
-		security: "Security Key"
+		security: "安全密钥"
 	},
 	appearance: {
 		title: "外观",
@@ -242,24 +242,9 @@ function setupCustomLocalize(hass) {
     };
 }
 
-const defaultConfig = {
-    key: "",
-    type: "",
-    security: "",
-    lightTheme: "normal",
-    darkTheme: "dark",
-    controls: ["ToolBar", "Geolocation"],
-    traffic: false,
-    viewMode: "2D",
-    zoom: 15,
-    entities: []
-};
 let AMapCardEditor = class AMapCardEditor extends r$2 {
     setConfig(config) {
-        this._config = {
-            ...defaultConfig,
-            ...config,
-        };
+        this._config = config;
     }
     render() {
         if (!this.hass || !this._config)
@@ -288,7 +273,7 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
                     customLocalize("editor.appearance.theme.options." + item),
                 ]),
                 label: customLocalize("editor.appearance.theme.mode.light"),
-                value: this._config.lightTheme || "",
+                value: this._config.lightTheme || "normal",
             },
             {
                 name: "darkTheme",
@@ -298,13 +283,7 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
                     customLocalize("editor.appearance.theme.options." + item),
                 ]),
                 label: customLocalize("editor.appearance.theme.mode.dark"),
-                value: this._config.darkTheme || "",
-            },
-            {
-                name: "viewMode",
-                selector: { select: { options: ["2D", "3D"] } },
-                label: customLocalize("editor.appearance.viewMode"),
-                value: this._config.viewMode || "2D",
+                value: this._config.darkTheme || "dark",
             },
             {
                 name: "controls",
@@ -314,7 +293,13 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
                     return acc;
                 }, {}),
                 label: customLocalize("editor.appearance.control.title"),
-                value: this._config.controls || [],
+                value: this._config.controls || ["ToolBar", "Geolocation"],
+            },
+            {
+                name: "viewMode",
+                selector: { select: { options: ["2D", "3D"] } },
+                label: customLocalize("editor.appearance.viewMode"),
+                value: this._config.viewMode || "2D",
             },
             {
                 name: "traffic",
@@ -401,6 +386,10 @@ var AMapLoader = /*@__PURE__*/getDefaultExportFromCjs(distExports);
 function getMapStyle(theme) {
     return "amap://styles/" + theme;
 }
+function getMapControls(controls) {
+    // "AMap." + control，并以,分隔;
+    return controls.map((control) => "AMap." + control);
+}
 
 // This puts your card into the UI card picker dialog
 window.customCards = window.customCards || [];
@@ -451,7 +440,7 @@ let AMapCard = class AMapCard extends r$2 {
             const AMap = await AMapLoader.load({
                 key: this._config.key,
                 version: "2.0",
-                plugins: this._config.controls,
+                plugins: getMapControls(this._config.controls),
                 Loca: { version: "2.0" },
             });
             this.map = new AMap.Map(this.shadowRoot.getElementById("amap"), {
@@ -461,16 +450,16 @@ let AMapCard = class AMapCard extends r$2 {
                 showTraffic: this._config.traffic,
             });
             // 添加实体
-            this._config.entities.forEach((entityId) => {
-                const stateObj = this.hass.states[entityId];
-                if (stateObj && stateObj.attributes.latitude && stateObj.attributes.longitude) {
-                    const marker = new AMap.Marker({
-                        position: [stateObj.attributes.longitude, stateObj.attributes.latitude],
-                        title: stateObj.attributes.friendly_name || entityId,
-                    });
-                    this.map.add(marker);
-                }
-            });
+            // this._config.entities.forEach((entityId) => {
+            //   const stateObj = this.hass!.states[entityId];
+            //   if (stateObj && stateObj.attributes.latitude && stateObj.attributes.longitude) {
+            //     const marker = new AMap.Marker({
+            //       position: [stateObj.attributes.longitude, stateObj.attributes.latitude],
+            //       title: stateObj.attributes.friendly_name || entityId,
+            //     });
+            //     this.map.add(marker);
+            //   }
+            // });
         }
         catch (e) {
             console.error("Failed to load AMap:", e);

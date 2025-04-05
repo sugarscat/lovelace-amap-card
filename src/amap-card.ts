@@ -3,7 +3,7 @@ import { customElement, property } from "lit/decorators.js";
 import { HomeAssistant, LovelaceCard, LovelaceCardEditor } from "custom-card-helpers";
 import AMapLoader from "@amap/amap-jsapi-loader";
 import { AMapCardConfig, AMapTheme } from "./types";
-import { getMapStyle } from "./utils";
+import { getMapControls, getMapStyle } from "./utils";
 import setupCustomLocalize from "./localize";
 
 // This puts your card into the UI card picker dialog
@@ -83,7 +83,7 @@ export class AMapCard extends LitElement implements LovelaceCard {
       const AMap = await AMapLoader.load({
         key: this._config.key,
         version: "2.0",
-        plugins: this._config.controls,
+        plugins: getMapControls(this._config.controls),
         Loca: { version: "2.0" },
       });
 
@@ -95,16 +95,16 @@ export class AMapCard extends LitElement implements LovelaceCard {
       });
 
       // 添加实体
-      this._config.entities.forEach((entityId) => {
-        const stateObj = this.hass!.states[entityId];
-        if (stateObj && stateObj.attributes.latitude && stateObj.attributes.longitude) {
-          const marker = new AMap.Marker({
-            position: [stateObj.attributes.longitude, stateObj.attributes.latitude],
-            title: stateObj.attributes.friendly_name || entityId,
-          });
-          this.map.add(marker);
-        }
-      });
+      // this._config.entities.forEach((entityId) => {
+      //   const stateObj = this.hass!.states[entityId];
+      //   if (stateObj && stateObj.attributes.latitude && stateObj.attributes.longitude) {
+      //     const marker = new AMap.Marker({
+      //       position: [stateObj.attributes.longitude, stateObj.attributes.latitude],
+      //       title: stateObj.attributes.friendly_name || entityId,
+      //     });
+      //     this.map.add(marker);
+      //   }
+      // });
     } catch (e) {
       console.error("Failed to load AMap:", e);
     }

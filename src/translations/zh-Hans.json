@@ -2,14 +2,14 @@
   "card": {
     "not_found": "未找到实体",
     "config_not_found": "未找到配置",
-    "Key_not_found": "未配置高德地图密钥或安全密钥"
+    "Key_not_found": "未配置高德地图的 Key 或安全密钥"
   },
   "editor": {
     "title": "标题",
     "api": {
       "title": "API 配置",
       "key": "Key",
-      "security": "Security Key"
+      "security": "安全密钥"
     },
     "appearance": {
       "title": "外观",

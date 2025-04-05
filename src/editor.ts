@@ -5,29 +5,13 @@ import { AMapCardConfig } from "./types";
 import { AMAP_CONTROLS, AMAP_THEMES } from "./const";
 import setupCustomLocalize from "./localize";
 
-export const defaultConfig: AMapCardConfig = {
-  key: "",
-  type: "",
-  security: "",
-  lightTheme: "normal",
-  darkTheme: "dark",
-  controls: ["ToolBar", "Geolocation"],
-  traffic: false,
-  viewMode: "2D",
-  zoom: 15,
-  entities: [],
-};
-
 @customElement("amap-card-editor")
 export class AMapCardEditor extends LitElement implements LovelaceCardEditor {
   @property({ attribute: false }) public hass!: HomeAssistant;
   @state() private _config?: AMapCardConfig;
 
   setConfig(config: AMapCardConfig): void {
-    this._config = {
-      ...defaultConfig,
-      ...config,
-    };
+    this._config = config;
   }
 
   protected render() {
@@ -56,7 +40,7 @@ export class AMapCardEditor extends LitElement implements LovelaceCardEditor {
           customLocalize("editor.appearance.theme.options." + item),
         ]),
         label: customLocalize("editor.appearance.theme.mode.light"),
-        value: this._config.lightTheme || "",
+        value: this._config.lightTheme || "normal",
       },
       {
         name: "darkTheme",
@@ -66,13 +50,7 @@ export class AMapCardEditor extends LitElement implements LovelaceCardEditor {
           customLocalize("editor.appearance.theme.options." + item),
         ]),
         label: customLocalize("editor.appearance.theme.mode.dark"),
-        value: this._config.darkTheme || "",
-      },
-      {
-        name: "viewMode",
-        selector: { select: { options: ["2D", "3D"] } },
-        label: customLocalize("editor.appearance.viewMode"),
-        value: this._config.viewMode || "2D",
+        value: this._config.darkTheme || "dark",
       },
       {
         name: "controls",
@@ -82,7 +60,13 @@ export class AMapCardEditor extends LitElement implements LovelaceCardEditor {
           return acc;
         }, {}),
         label: customLocalize("editor.appearance.control.title"),
-        value: this._config.controls || [],
+        value: this._config.controls || ["ToolBar", "Geolocation"],
+      },
+      {
+        name: "viewMode",
+        selector: { select: { options: ["2D", "3D"] } },
+        label: customLocalize("editor.appearance.viewMode"),
+        value: this._config.viewMode || "2D",
       },
       {
         name: "traffic",
