@@ -268,12 +268,11 @@ const defaultConfig = {
     entities: [],
 };
 let AMapCardEditor = class AMapCardEditor extends r$2 {
-    constructor() {
-        super(...arguments);
-        this._config = defaultConfig;
-    }
     setConfig(config) {
         this._config = config;
+    }
+    firstUpdated() {
+        this._config = defaultConfig;
     }
     render() {
         if (!this.hass || !this._config)
@@ -331,16 +330,16 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
                 },
                 label: customLocalize("editor.appearance.pitch"),
             },
-            {
-                name: "zoom",
-                selector: {
-                    number: { min: 3, max: 20, step: 1, mode: "slider" },
-                },
-                label: customLocalize("editor.appearance.zoom"),
-            },
+            // {
+            //   name: "zoom",
+            //   selector: {
+            //     number: { min: 3, max: 20, step: 1, mode: "slider" },
+            //   },
+            //   label: customLocalize("editor.appearance.zoom"),
+            // },
             {
                 name: "entities",
-                selector: { entity: { multiple: true, domain: ["zone", "device_tracker"] } },
+                selector: { entity: { multiple: true, domain: ["zone", "device_tracker", "person"] } },
                 label: customLocalize("editor.entity"),
             },
         ];
@@ -1718,11 +1717,25 @@ let AMapCard = class AMapCard extends r$2 {
                 if (stateObj && stateObj.attributes.latitude && stateObj.attributes.longitude) {
                     // 转换坐标系
                     const [gcjLng, gcjLat] = coordtransformExports.wgs84togcj02(stateObj.attributes.longitude, stateObj.attributes.latitude);
-                    // const icon = stateObj.attributes.icon || "mdi:map-marker-radius";
+                    const imgHtml = this._generateIconHtml(stateObj);
+                    const markerContent = x `
+            <div
+              style="
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              overflow: hidden;
+              background-color: transparent;
+            "
+            >
+              ${imgHtml}
+            </div>
+          `;
                     const marker = new AMap.Marker({
                         position: [gcjLng, gcjLat],
                         title: stateObj.attributes.friendly_name || entityId,
                         // icon: icon,
+                        content: markerContent,
                     });
                     // 添加圆形
                     const center = new AMap.LngLat(gcjLng, gcjLat);
@@ -1739,6 +1752,12 @@ let AMapCard = class AMapCard extends r$2 {
                         fillColor: "#1791fc", //圆形填充颜色
                         cursor: "pointer", //鼠标悬停时的鼠标样式
                     });
+                    const hass = this.hass;
+                    circle.on("click", function () {
+                        hass.callService('frontend', 'more-info', {
+                            entityId: entityId // 实体的 ID
+                        });
+                    });
                     this.map.add(marker);
                     this.map.add(circle);
                     fitView.push(circle);
@@ -1750,6 +1769,23 @@ let AMapCard = class AMapCard extends r$2 {
         catch (e) {
             console.error("Failed to load AMap:", e);
         }
+    }
+    _generateIconHtml(stateObj) {
+        let imgHtml = x ` <i class="mdi mdi-map-marker-radius"></i> `;
+        if (stateObj.attributes.entity_picture) {
+            imgHtml = x `
+      <img
+        src="${stateObj.attributes.entity_picture}"
+        alt=""
+        style="width: 100%; height: 100%; object-fit: cover;"
+      />
+    `;
+        }
+        else if (stateObj.attributes.icon) {
+            const icon = stateObj.attributes.icon.replace(":", "-");
+            imgHtml = x ` <i class="mdi ${icon}"></i>`;
+        }
+        return imgHtml;
     }
     _getTheme() {
         // 判断是否自动，根据系统主题切换
