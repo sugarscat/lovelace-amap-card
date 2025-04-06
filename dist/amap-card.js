@@ -268,11 +268,12 @@ const defaultConfig = {
     entities: [],
 };
 let AMapCardEditor = class AMapCardEditor extends r$2 {
+    constructor() {
+        super(...arguments);
+        this._config = defaultConfig;
+    }
     setConfig(config) {
-        this._config = {
-            ...defaultConfig,
-            ...config,
-        };
+        this._config = config;
     }
     render() {
         if (!this.hass || !this._config)
@@ -1483,7 +1484,7 @@ window.customCards = window.customCards || [];
 window.customCards.push({
     type: "amap-card",
     name: "AMap Card",
-    description: `<img src="https://webapi.amap.com/theme/v2.0/logo@2x.png" alt="amap-logo">`,
+    description: "高德地图卡片。",
 });
 let AMapCard = class AMapCard extends r$2 {
     static async getConfigElement() {
@@ -1551,16 +1552,31 @@ let AMapCard = class AMapCard extends r$2 {
                 });
             }
             // 添加实体
-            // this._config.entities.forEach((entityId) => {
-            //   const stateObj = this.hass!.states[entityId];
-            //   if (stateObj && stateObj.attributes.latitude && stateObj.attributes.longitude) {
-            //     const marker = new AMap.Marker({
-            //       position: [stateObj.attributes.longitude, stateObj.attributes.latitude],
-            //       title: stateObj.attributes.friendly_name || entityId,
-            //     });
-            //     this.map.add(marker);
-            //   }
-            // });
+            this._config.entities.forEach((entityId) => {
+                const stateObj = this.hass.states[entityId];
+                if (stateObj && stateObj.attributes.latitude && stateObj.attributes.longitude) {
+                    const icon = stateObj.attributes.icon || "mdi:map-marker-radius";
+                    const marker = new AMap.Marker({
+                        position: [stateObj.attributes.longitude, stateObj.attributes.latitude],
+                        title: stateObj.attributes.friendly_name || entityId,
+                        icon: icon,
+                    });
+                    // 添加圆形
+                    const circleMarker = new AMap.CircleMarker({
+                        center: [stateObj.attributes.longitude, stateObj.attributes.latitude], //圆心
+                        radius: stateObj.attributes.radius || 10, //半径
+                        strokeColor: "white", //轮廓线颜色
+                        strokeWeight: 2, //轮廓线宽度
+                        strokeOpacity: 0.5, //轮廓线透明度
+                        fillColor: "rgb(138,228,255)", //圆点填充颜色
+                        fillOpacity: 0.5, //圆点填充透明度
+                        zIndex: 10, //圆点覆盖物的叠加顺序
+                        cursor: "pointer", //鼠标悬停时的鼠标样式
+                    });
+                    this.map.add(marker);
+                    this.map.add(circleMarker);
+                }
+            });
         }
         catch (e) {
             console.error("Failed to load AMap:", e);
