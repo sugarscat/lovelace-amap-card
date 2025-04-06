@@ -134,7 +134,7 @@ export class AMapCard extends LitElement implements LovelaceCard {
           });
           // 添加圆形
           const center = new AMap.LngLat(gcjLng, gcjLat);
-          const radius = stateObj.attributes.radius || 10;
+          const radius = stateObj.attributes.radius || stateObj.attributes.gps_accuracy || 10;
           const circle = new AMap.Circle({
             center: center, //圆心
             radius: radius, //半径
