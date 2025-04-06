@@ -255,9 +255,23 @@ function setupCustomLocalize(hass) {
     };
 }
 
+const defaultConfig = {
+    key: "",
+    type: "",
+    security: "",
+    lightTheme: "normal",
+    darkTheme: "dark",
+    controls: ["ToolBar"],
+    viewMode: "2D",
+    pitch: 30,
+    zoom: 15,
+    entities: [],
+};
 let AMapCardEditor = class AMapCardEditor extends r$2 {
     setConfig(config) {
-        console.log("setConfig", config);
+        if (!config.key) {
+            this._config = defaultConfig;
+        }
         this._config = config;
     }
     render() {
