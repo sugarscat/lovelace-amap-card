@@ -98,8 +98,8 @@ const AMAP_CONTROLS = [
 const AMAP_CONTROLS_POSE = {
     ToolBar: {
         position: {
-            right: "15px",
-            bottom: "55px",
+            right: "16px",
+            bottom: "50px",
         },
     },
     Scale: null,
@@ -143,6 +143,7 @@ var editor$1 = {
 			}
 		},
 		viewMode: "View Mode",
+		pitch: "Map Pitch Angle (3D)",
 		zoom: "Zoom",
 		control: {
 			title: "Control",
@@ -202,6 +203,7 @@ var editor = {
 			}
 		},
 		viewMode: "视图模式",
+		pitch: "地图俯仰角度(3D)",
 		zoom: "缩放",
 		control: {
 			title: "控件",
@@ -259,8 +261,9 @@ const defaultConfig = {
     security: "",
     lightTheme: "normal",
     darkTheme: "dark",
-    controls: ["ToolBar", "Geolocation"],
+    controls: ["ToolBar"],
     viewMode: "2D",
+    pitch: 30,
     zoom: 15,
     entities: [],
 };
@@ -319,6 +322,13 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
                 name: "viewMode",
                 selector: { select: { options: ["2D", "3D"] } },
                 label: customLocalize("editor.appearance.viewMode"),
+            },
+            {
+                name: "pitch",
+                selector: {
+                    number: { min: 0, max: 83, step: 1, mode: "slider" },
+                },
+                label: customLocalize("editor.appearance.pitch"),
             },
             {
                 name: "zoom",
@@ -405,13 +415,18 @@ function amapCardStyle() {
     return i$3 `
     .amap-card {
       overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      box-sizing: border-box;
     }
 
     #amap {
       padding: 0;
       margin: 0;
       width: 100%;
-      height: 100vh;
+      height: 100%;
+      //max-height: 390px;
     }
 
     .amap-custom {
@@ -1096,7 +1111,6 @@ function amapCardStyle() {
       margin: -24px;
       width: 48px;
       height: 48px;
-      z-index: 10;
       background: url(https://webapi.amap.com/theme/v1.3/controlbar/ctb.png) -231px -26px no-repeat;
       background-size: 348px 270px;
     }
@@ -1508,7 +1522,7 @@ let AMapCard = class AMapCard extends r$2 {
     }
     async _loadMap() {
         if (!this._config.key || !this._config.security) {
-            console.info("AMap Key or Security code not configured");
+            console.warn("No key or security key is configured for AMap");
             return;
         }
         window._AMapSecurityConfig = {
@@ -1521,9 +1535,12 @@ let AMapCard = class AMapCard extends r$2 {
                 plugins: getMapControls(this._config.controls) ?? [],
             });
             this.map = new AMap.Map(this.shadowRoot.getElementById("amap"), {
+                pitch: this._config.pitch || 30, //地图俯仰角度，有效范围 0 度- 83 度
                 viewMode: this._config.viewMode || "2D",
                 zoom: this._config.zoom || 12,
                 mapStyle: getMapStyle(this._getTheme()) ?? "amap://styles/normal",
+                rotateEnable: true, //是否开启地图旋转交互 鼠标右键 + 鼠标画圈移动 或 键盘Ctrl + 鼠标左键画圈移动
+                pitchEnable: true, //是否开启地图倾斜交互 鼠标右键 + 鼠标上下移动或键盘Ctrl + 鼠标左键上下移动
                 // center: [116.397428, 39.90923], //地图中心点
             });
             // 添加控件
