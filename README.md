@@ -4,6 +4,10 @@ Home Assistant 的高德地图卡片。
 
 ## 开始
 
+### 申请高德地图 API Key
+
+[高德地图开放平台](https://lbs.amap.com/api/javascript-api-v2/prerequisites)
+
 ### 使用 [HACS](https://hacs.xyz/) 安装
 
 HACS > 右上角三个点 > Custom repositories > Repository: https://github.com/sugarscat/lovelace-amap-card.git & Category or Type: Dashboard > ADD > 点击 HACS 的 New 或 Available for download 分类下的“高德地图卡片”，进入集成详情页 > DOWNLOAD
