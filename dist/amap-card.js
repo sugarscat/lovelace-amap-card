@@ -269,8 +269,9 @@ const defaultConfig = {
 };
 let AMapCardEditor = class AMapCardEditor extends r$2 {
     setConfig(config) {
-        if (!config.key) {
-            this._config = defaultConfig;
+        if (Object.keys(config).length === 1 && config.type) {
+            // 初始化默认值
+            this._config = { ...defaultConfig, ...config };
         }
         this._config = config;
     }
