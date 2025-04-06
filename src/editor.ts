@@ -21,10 +21,17 @@ export const defaultConfig: AMapCardConfig = {
 @customElement("amap-card-editor")
 export class AMapCardEditor extends LitElement implements LovelaceCardEditor {
   @property({ attribute: false }) public hass!: HomeAssistant;
-  @state() private _config: AMapCardConfig = defaultConfig;
+  @state() private _config?: AMapCardConfig;
+  private _isInitialized = false;
 
   setConfig(config: AMapCardConfig): void {
-    this._config = config;
+    if (!this._isInitialized) {
+      // 初始化默认值
+      this._config = { ...defaultConfig, ...config };
+      this._isInitialized = true;
+    } else {
+      this._config = config;
+    }
   }
 
   protected render() {
@@ -82,16 +89,16 @@ export class AMapCardEditor extends LitElement implements LovelaceCardEditor {
         },
         label: customLocalize("editor.appearance.pitch"),
       },
-      {
-        name: "zoom",
-        selector: {
-          number: { min: 3, max: 20, step: 1, mode: "slider" },
-        },
-        label: customLocalize("editor.appearance.zoom"),
-      },
+      // {
+      //   name: "zoom",
+      //   selector: {
+      //     number: { min: 3, max: 20, step: 1, mode: "slider" },
+      //   },
+      //   label: customLocalize("editor.appearance.zoom"),
+      // },
       {
         name: "entities",
-        selector: { entity: { multiple: true, domain: ["zone", "device_tracker"] } },
+        selector: { entity: { multiple: true, domain: ["zone", "device_tracker", "person"] } },
         label: customLocalize("editor.entity"),
       },
     ];

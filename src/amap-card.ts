@@ -4,7 +4,7 @@ import { HomeAssistant, LovelaceCard, LovelaceCardEditor } from "custom-card-hel
 import AMapLoader from "@amap/amap-jsapi-loader";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
-import { wgs84togcj02 } from 'coordtransform';
+import { wgs84togcj02 } from "coordtransform";
 import { AMapCardConfig, AMapTheme } from "./types";
 import { getMapControls, getMapStyle } from "./utils";
 import setupCustomLocalize from "./localize";
@@ -97,18 +97,40 @@ export class AMapCard extends LitElement implements LovelaceCard {
           this.map.addControl(new AMap[control](AMAP_CONTROLS_POSE[control] ?? {}));
         });
       }
+
       const fitView: any[] = [];
       // 添加实体
       this._config.entities.forEach((entityId) => {
         const stateObj = this.hass!.states[entityId];
         if (stateObj && stateObj.attributes.latitude && stateObj.attributes.longitude) {
           // 转换坐标系
-          const [gcjLng, gcjLat] = wgs84togcj02(stateObj.attributes.longitude, stateObj.attributes.latitude);
-          // const icon = stateObj.attributes.icon || "mdi:map-marker-radius";
+          const [gcjLng, gcjLat] = wgs84togcj02(
+            stateObj.attributes.longitude,
+            stateObj.attributes.latitude
+          );
+          const imgHtml = this._generateIconHtml(stateObj);
+          const markerContent = `
+            <div
+              style="
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+              overflow: hidden;
+              background-color: transparent;
+              display: flex;
+              justify-content: center;
+              align-items: center; 
+            "
+            >
+              ${imgHtml}
+            </div>
+          `;
           const marker = new AMap.Marker({
             position: [gcjLng, gcjLat],
             title: stateObj.attributes.friendly_name || entityId,
             // icon: icon,
+            content: markerContent,
+            offset: new AMap.Pixel(-20, -20), //偏移量
           });
           // 添加圆形
           const center = new AMap.LngLat(gcjLng, gcjLat);
@@ -125,16 +147,67 @@ export class AMapCard extends LitElement implements LovelaceCard {
             fillColor: "#1791fc", //圆形填充颜色
             cursor: "pointer", //鼠标悬停时的鼠标样式
           });
+
+          circle.on("click", () => {
+            this._handleClick(entityId);
+          });
+          marker.on("click", () => {
+            this._handleClick(entityId);
+          });
+
           this.map.add(marker);
           this.map.add(circle);
-          fitView.push(circle)
+          fitView.push(circle);
         }
       });
       // 根据覆盖物范围调整视野
-      this.map.setFitView(fitView)
+      this.map.setFitView(fitView);
     } catch (e) {
       console.error("Failed to load AMap:", e);
     }
+  }
+
+  // https://developers.home-assistant.io/blog/2023/07/07/action-event-custom-cards/
+  private _handleClick(entityId: string) {
+    const actionConfig = {
+      entity: entityId,
+      tap_action: {
+        action: "more-info",
+      },
+    };
+    const event = new CustomEvent("hass-action", {
+      bubbles: true,
+      composed: true,
+      detail: {
+        config: actionConfig,
+        action: "tap",
+      },
+    });
+    this.dispatchEvent(event);
+  }
+
+  private _generateIconHtml(stateObj: any) {
+    let imgHtml = ` <ha-icon icon="mdi:map-marker-radius">icon</ha-icon> `;
+    if (stateObj.attributes.entity_picture) {
+      imgHtml = `
+      <img
+        src="${stateObj.attributes.entity_picture}"
+        alt=""
+        style="width: 100%; height: 100%; object-fit: cover;"
+      />
+    `;
+    } else if (stateObj.attributes.icon) {
+      const attributes = stateObj.attributes;
+      imgHtml = `
+      <ha-icon icon="${attributes.icon}" 
+        style="
+        --icon-primary-color: ${attributes.color}; 
+        --mdc-icon-size: ${attributes.size - 10}px;
+        "
+      >icon</ha-icon>
+      `;
+    }
+    return imgHtml;
   }
 
   private _getTheme(): AMapTheme {

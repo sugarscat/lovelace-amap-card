@@ -1,4 +1,4 @@
-var version = "0.0.1";
+var version = "0.1.0";
 
 /******************************************************************************
 Copyright (c) Microsoft Corporation.
@@ -270,7 +270,7 @@ const defaultConfig = {
 let AMapCardEditor = class AMapCardEditor extends r$2 {
     constructor() {
         super(...arguments);
-        this._isInitialized = false; // 新增标志位
+        this._isInitialized = false;
     }
     setConfig(config) {
         if (!this._isInitialized) {
