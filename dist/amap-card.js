@@ -272,7 +272,9 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
         this._config = config;
     }
     firstUpdated() {
-        this._config = defaultConfig;
+        this.dispatchEvent(new CustomEvent("config-changed", {
+            detail: { config: defaultConfig },
+        }));
     }
     render() {
         if (!this.hass || !this._config)
@@ -1726,6 +1728,9 @@ let AMapCard = class AMapCard extends r$2 {
               border-radius: 50%;
               overflow: hidden;
               background-color: transparent;
+              display: flex;
+              justify-content: center;
+              align-items: center; 
             "
             >
               ${imgHtml}
@@ -1736,6 +1741,7 @@ let AMapCard = class AMapCard extends r$2 {
                         title: stateObj.attributes.friendly_name || entityId,
                         // icon: icon,
                         content: markerContent,
+                        offset: new AMap.Pixel(-20, -20), //偏移量
                     });
                     // 添加圆形
                     const center = new AMap.LngLat(gcjLng, gcjLat);
@@ -1752,11 +1758,11 @@ let AMapCard = class AMapCard extends r$2 {
                         fillColor: "#1791fc", //圆形填充颜色
                         cursor: "pointer", //鼠标悬停时的鼠标样式
                     });
-                    const hass = this.hass;
-                    circle.on("click", function () {
-                        hass.callService('frontend', 'more-info', {
-                            entityId: entityId // 实体的 ID
-                        });
+                    circle.on("click", () => {
+                        this._handleClick(entityId);
+                    });
+                    marker.on("click", () => {
+                        this._handleClick(entityId);
                     });
                     this.map.add(marker);
                     this.map.add(circle);
@@ -1770,8 +1776,26 @@ let AMapCard = class AMapCard extends r$2 {
             console.error("Failed to load AMap:", e);
         }
     }
+    // https://developers.home-assistant.io/blog/2023/07/07/action-event-custom-cards/
+    _handleClick(entityId) {
+        const actionConfig = {
+            entity: entityId,
+            tap_action: {
+                action: "more-info",
+            },
+        };
+        const event = new CustomEvent("hass-action", {
+            bubbles: true,
+            composed: true,
+            detail: {
+                config: actionConfig,
+                action: "tap",
+            },
+        });
+        this.dispatchEvent(event);
+    }
     _generateIconHtml(stateObj) {
-        let imgHtml = ` <i class="mdi mdi-map-marker-radius"></i> `;
+        let imgHtml = ` <ha-icon icon="mdi:map-marker-radius">icon</ha-icon> `;
         if (stateObj.attributes.entity_picture) {
             imgHtml = `
       <img
@@ -1782,8 +1806,15 @@ let AMapCard = class AMapCard extends r$2 {
     `;
         }
         else if (stateObj.attributes.icon) {
-            const icon = stateObj.attributes.icon.replace(":", "-");
-            imgHtml = ` <i class="mdi ${icon}"></i>`;
+            const attributes = stateObj.attributes;
+            imgHtml = `
+      <ha-icon icon="${attributes.icon}" 
+        style="
+        --icon-primary-color: ${attributes.color}; 
+        --mdc-icon-size: ${attributes.size - 10}px;
+        "
+      >icon</ha-icon>
+      `;
         }
         return imgHtml;
     }
