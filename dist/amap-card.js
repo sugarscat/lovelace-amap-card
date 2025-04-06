@@ -1718,7 +1718,7 @@ let AMapCard = class AMapCard extends r$2 {
                     // 转换坐标系
                     const [gcjLng, gcjLat] = coordtransformExports.wgs84togcj02(stateObj.attributes.longitude, stateObj.attributes.latitude);
                     const imgHtml = this._generateIconHtml(stateObj);
-                    const markerContent = x `
+                    const markerContent = `
             <div
               style="
               width: 40px;
@@ -1771,9 +1771,9 @@ let AMapCard = class AMapCard extends r$2 {
         }
     }
     _generateIconHtml(stateObj) {
-        let imgHtml = x ` <i class="mdi mdi-map-marker-radius"></i> `;
+        let imgHtml = ` <i class="mdi mdi-map-marker-radius"></i> `;
         if (stateObj.attributes.entity_picture) {
-            imgHtml = x `
+            imgHtml = `
       <img
         src="${stateObj.attributes.entity_picture}"
         alt=""
@@ -1783,7 +1783,7 @@ let AMapCard = class AMapCard extends r$2 {
         }
         else if (stateObj.attributes.icon) {
             const icon = stateObj.attributes.icon.replace(":", "-");
-            imgHtml = x ` <i class="mdi ${icon}"></i>`;
+            imgHtml = ` <i class="mdi ${icon}"></i>`;
         }
         return imgHtml;
     }
