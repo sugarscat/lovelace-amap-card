@@ -257,6 +257,7 @@ function setupCustomLocalize(hass) {
 
 let AMapCardEditor = class AMapCardEditor extends r$2 {
     setConfig(config) {
+        console.log("setConfig", config);
         this._config = config;
     }
     render() {
