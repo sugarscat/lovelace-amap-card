@@ -269,11 +269,15 @@ const defaultConfig = {
 };
 let AMapCardEditor = class AMapCardEditor extends r$2 {
     setConfig(config) {
-        if (Object.keys(config).length === 1 && config.type) {
+        if (!config ||
+            Object.keys(config).length === 0 ||
+            (Object.keys(config).length === 1 && config.type)) {
             // 初始化默认值
             this._config = { ...defaultConfig, ...config };
         }
-        this._config = config;
+        else {
+            this._config = config;
+        }
     }
     render() {
         if (!this.hass || !this._config)
