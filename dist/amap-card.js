@@ -1555,26 +1555,34 @@ let AMapCard = class AMapCard extends r$2 {
             this._config.entities.forEach((entityId) => {
                 const stateObj = this.hass.states[entityId];
                 if (stateObj && stateObj.attributes.latitude && stateObj.attributes.longitude) {
-                    const icon = stateObj.attributes.icon || "mdi:map-marker-radius";
+                    // const icon = stateObj.attributes.icon || "mdi:map-marker-radius";
                     const marker = new AMap.Marker({
                         position: [stateObj.attributes.longitude, stateObj.attributes.latitude],
                         title: stateObj.attributes.friendly_name || entityId,
-                        icon: icon,
+                        // icon: icon,
                     });
                     // 添加圆形
-                    const circleMarker = new AMap.CircleMarker({
-                        center: [stateObj.attributes.longitude, stateObj.attributes.latitude], //圆心
-                        radius: stateObj.attributes.radius || 10, //半径
-                        strokeColor: "white", //轮廓线颜色
-                        strokeWeight: 2, //轮廓线宽度
-                        strokeOpacity: 0.5, //轮廓线透明度
-                        fillColor: "rgb(138,228,255)", //圆点填充颜色
-                        fillOpacity: 0.5, //圆点填充透明度
-                        zIndex: 10, //圆点覆盖物的叠加顺序
+                    //设置圆形位置
+                    const center = new AMap.LngLat(stateObj.attributes.longitude, stateObj.attributes.latitude);
+                    //设置圆的半径大小
+                    const radius = stateObj.attributes.radius || 10;
+                    const circle = new AMap.Circle({
+                        center: center, //圆心
+                        radius: radius, //半径
+                        borderWeight: 0, //描边的宽度
+                        strokeColor: "#1791fc", //轮廓线颜色
+                        strokeOpacity: 1, //轮廓线透明度
+                        strokeWeight: 3, //轮廓线宽度
+                        fillOpacity: 0.4, //圆形填充透明度
+                        strokeDasharray: [10, 10],
+                        fillColor: "#1791fc", //圆形填充颜色
                         cursor: "pointer", //鼠标悬停时的鼠标样式
                     });
                     this.map.add(marker);
-                    this.map.add(circleMarker);
+                    //圆形 Circle 对象添加到 Map
+                    this.map.add(circle);
+                    //根据覆盖物范围调整视野
+                    this.map.setFitView([circle]);
                 }
             });
         }
