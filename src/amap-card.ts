@@ -1,7 +1,10 @@
-import { html, LitElement, nothing } from "lit";
+import { html, LitElement } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { HomeAssistant, LovelaceCard, LovelaceCardEditor } from "custom-card-helpers";
 import AMapLoader from "@amap/amap-jsapi-loader";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-expect-error
+import { wgs84togcj02 } from 'coordtransform';
 import { AMapCardConfig, AMapTheme } from "./types";
 import { getMapControls, getMapStyle } from "./utils";
 import setupCustomLocalize from "./localize";
@@ -13,7 +16,7 @@ import { AMAP_CONTROLS_POSE } from "./const";
 (window as any).customCards.push({
   type: "amap-card",
   name: "AMap Card",
-  description: `<img src="https://webapi.amap.com/theme/v2.0/logo@2x.png" alt="amap-logo">`,
+  description: "高德地图卡片。",
 });
 
 @customElement("amap-card")
@@ -37,20 +40,13 @@ export class AMapCard extends LitElement implements LovelaceCard {
     return 4;
   }
 
-  // 卸载时执行
-  disconnectedCallback() {
-    if (this.map) {
-      this.map.destroy();
-    }
-  }
-
   protected firstUpdated() {
     this._loadMap().then();
   }
 
   protected render() {
     if (!this.hass) {
-      return nothing;
+      return html``;
     }
 
     const customLocalize = setupCustomLocalize(this.hass);
@@ -92,7 +88,7 @@ export class AMapCard extends LitElement implements LovelaceCard {
         mapStyle: getMapStyle(this._getTheme()) ?? "amap://styles/normal",
         rotateEnable: true, //是否开启地图旋转交互 鼠标右键 + 鼠标画圈移动 或 键盘Ctrl + 鼠标左键画圈移动
         pitchEnable: true, //是否开启地图倾斜交互 鼠标右键 + 鼠标上下移动或键盘Ctrl + 鼠标左键上下移动
-        // center: [116.397428, 39.90923], //地图中心点
+        center: [116.397428, 39.90923], //地图中心点
       });
 
       // 添加控件
@@ -101,18 +97,41 @@ export class AMapCard extends LitElement implements LovelaceCard {
           this.map.addControl(new AMap[control](AMAP_CONTROLS_POSE[control] ?? {}));
         });
       }
-
+      const fitView: any[] = [];
       // 添加实体
-      // this._config.entities.forEach((entityId) => {
-      //   const stateObj = this.hass!.states[entityId];
-      //   if (stateObj && stateObj.attributes.latitude && stateObj.attributes.longitude) {
-      //     const marker = new AMap.Marker({
-      //       position: [stateObj.attributes.longitude, stateObj.attributes.latitude],
-      //       title: stateObj.attributes.friendly_name || entityId,
-      //     });
-      //     this.map.add(marker);
-      //   }
-      // });
+      this._config.entities.forEach((entityId) => {
+        const stateObj = this.hass!.states[entityId];
+        if (stateObj && stateObj.attributes.latitude && stateObj.attributes.longitude) {
+          // 转换坐标系
+          const [gcjLng, gcjLat] = wgs84togcj02(stateObj.attributes.longitude, stateObj.attributes.latitude);
+          // const icon = stateObj.attributes.icon || "mdi:map-marker-radius";
+          const marker = new AMap.Marker({
+            position: [gcjLng, gcjLat],
+            title: stateObj.attributes.friendly_name || entityId,
+            // icon: icon,
+          });
+          // 添加圆形
+          const center = new AMap.LngLat(gcjLng, gcjLat);
+          const radius = stateObj.attributes.radius || 10;
+          const circle = new AMap.Circle({
+            center: center, //圆心
+            radius: radius, //半径
+            borderWeight: 0, //描边的宽度
+            strokeColor: "#1791fc", //轮廓线颜色
+            strokeOpacity: 0.8, //轮廓线透明度
+            strokeWeight: 3, //轮廓线宽度
+            fillOpacity: 0.2, //圆形填充透明度
+            strokeDasharray: [10, 10],
+            fillColor: "#1791fc", //圆形填充颜色
+            cursor: "pointer", //鼠标悬停时的鼠标样式
+          });
+          this.map.add(marker);
+          this.map.add(circle);
+          fitView.push(circle)
+        }
+      });
+      // 根据覆盖物范围调整视野
+      this.map.setFitView(fitView)
     } catch (e) {
       console.error("Failed to load AMap:", e);
     }

@@ -21,13 +21,10 @@ export const defaultConfig: AMapCardConfig = {
 @customElement("amap-card-editor")
 export class AMapCardEditor extends LitElement implements LovelaceCardEditor {
   @property({ attribute: false }) public hass!: HomeAssistant;
-  @state() private _config?: AMapCardConfig;
+  @state() private _config: AMapCardConfig = defaultConfig;
 
   setConfig(config: AMapCardConfig): void {
-    this._config = {
-      ...defaultConfig,
-      ...config,
-    };
+    this._config = config;
   }
 
   protected render() {
@@ -94,7 +91,7 @@ export class AMapCardEditor extends LitElement implements LovelaceCardEditor {
       },
       {
         name: "entities",
-        selector: { entity: { multiple: true, domain: "zone" } },
+        selector: { entity: { multiple: true, domain: ["zone", "device_tracker"] } },
         label: customLocalize("editor.entity"),
       },
     ];
