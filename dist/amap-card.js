@@ -95,6 +95,19 @@ const AMAP_CONTROLS = [
     "HawkEye", // 鹰眼控件
     "MapType", // 图层切换控件
 ];
+const AMAP_CONTROLS_POSE = {
+    ToolBar: {
+        position: {
+            right: "15px",
+            bottom: "55px",
+        },
+    },
+    Scale: null,
+    ControlBar: null,
+    Geolocation: null,
+    HawkEye: null,
+    MapType: null,
+};
 
 var card$1 = {
 	not_found: "Entity not found",
@@ -131,7 +144,6 @@ var editor$1 = {
 		},
 		viewMode: "View Mode",
 		zoom: "Zoom",
-		traffic: "Real-time road conditions",
 		control: {
 			title: "Control",
 			ToolBar: "Zoom Control",
@@ -191,7 +203,6 @@ var editor = {
 		},
 		viewMode: "视图模式",
 		zoom: "缩放",
-		traffic: "实时路况",
 		control: {
 			title: "控件",
 			ToolBar: "缩放控件",
@@ -249,7 +260,6 @@ const defaultConfig = {
     lightTheme: "normal",
     darkTheme: "dark",
     controls: ["ToolBar", "Geolocation"],
-    traffic: false,
     viewMode: "2D",
     zoom: 15,
     entities: [],
@@ -309,11 +319,6 @@ let AMapCardEditor = class AMapCardEditor extends r$2 {
                 name: "viewMode",
                 selector: { select: { options: ["2D", "3D"] } },
                 label: customLocalize("editor.appearance.viewMode"),
-            },
-            {
-                name: "traffic",
-                selector: { boolean: {} },
-                label: customLocalize("editor.appearance.traffic"),
             },
             {
                 name: "zoom",
@@ -403,12 +408,10 @@ function amapCardStyle() {
     }
 
     #amap {
+      padding: 0;
+      margin: 0;
       width: 100%;
       height: 100vh;
-    }
-
-    .amap-logo {
-      display: none !important;
     }
 
     .amap-custom {
@@ -1400,6 +1403,31 @@ function amapCardStyle() {
       pointer-events: none;
     }
 
+    .amap-geolocation {
+      font-size: 12px;
+      font-family:
+        -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif,
+        "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      line-height: 1.5;
+      font-weight: 300;
+      color: #111213;
+      box-sizing: border-box;
+      position: absolute;
+      -webkit-tap-highlight-color: transparent;
+      background-color: #fff;
+      box-shadow: 0 0 5px silver;
+      cursor: pointer;
+      background-image: url(https://a.amap.com/jsapi/static/image/plugin/locate.png);
+      background-size: 24px;
+      background-repeat: no-repeat;
+      background-position: 50%;
+      bottom: 15px;
+      right: 15px;
+      height: 32px;
+      width: 32px;
+      border-radius: 50%;
+    }
+
     .amap-hawkeye {
       transition:
         width 0.2s,
@@ -1440,7 +1468,7 @@ window.customCards = window.customCards || [];
 window.customCards.push({
     type: "amap-card",
     name: "AMap Card",
-    description: "AMap Card | 高德地图卡片",
+    description: `<img src="https://webapi.amap.com/theme/v2.0/logo@2x.png" alt="amap-logo">`,
 });
 let AMapCard = class AMapCard extends r$2 {
     static async getConfigElement() {
@@ -1476,7 +1504,7 @@ let AMapCard = class AMapCard extends r$2 {
         <ha-alert alert-type="error">${customLocalize("card.Key_not_found")}</ha-alert>
       </ha-card>`;
         }
-        return x `<ha-card class="amap-card"><div id="amap"></div></ha-card>`;
+        return x `<ha-card class="amap-card"><div id="amap" tabindex="0"></div></ha-card>`;
     }
     async _loadMap() {
         if (!this._config.key || !this._config.security) {
@@ -1495,21 +1523,13 @@ let AMapCard = class AMapCard extends r$2 {
             this.map = new AMap.Map(this.shadowRoot.getElementById("amap"), {
                 viewMode: this._config.viewMode || "2D",
                 zoom: this._config.zoom || 12,
-                mapStyle: getMapStyle(this._getTheme()) ?? [],
-                center: [116.397428, 39.90923], //地图中心点
+                mapStyle: getMapStyle(this._getTheme()) ?? "amap://styles/normal",
+                // center: [116.397428, 39.90923], //地图中心点
             });
-            // 实时路况图层
-            if (this._config.traffic) {
-                const trafficLayer = new AMap.TileLayer.Traffic({
-                    zIndex: 10,
-                    zooms: [7, 22],
-                });
-                trafficLayer.show();
-            }
             // 添加控件
             if (this._config.controls.length > 0) {
                 this._config.controls.forEach((control) => {
-                    this.map.addControl(new AMap[control]());
+                    this.map.addControl(new AMap[control](AMAP_CONTROLS_POSE[control] ?? {}));
                 });
             }
             // 添加实体
