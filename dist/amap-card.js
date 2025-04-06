@@ -268,12 +268,15 @@ const defaultConfig = {
     entities: [],
 };
 let AMapCardEditor = class AMapCardEditor extends r$2 {
+    constructor() {
+        super(...arguments);
+        this._isInitialized = false; // 新增标志位
+    }
     setConfig(config) {
-        if (!config ||
-            Object.keys(config).length === 0 ||
-            (Object.keys(config).length === 1 && config.type)) {
+        if (!this._isInitialized) {
             // 初始化默认值
             this._config = { ...defaultConfig, ...config };
+            this._isInitialized = true;
         }
         else {
             this._config = config;
