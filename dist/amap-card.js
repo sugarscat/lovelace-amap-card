@@ -1711,6 +1711,7 @@ let AMapCard = class AMapCard extends r$2 {
                     this.map.addControl(new AMap[control](AMAP_CONTROLS_POSE[control] ?? {}));
                 });
             }
+            const fitView = [];
             // 添加实体
             this._config.entities.forEach((entityId) => {
                 const stateObj = this.hass.states[entityId];
@@ -1724,9 +1725,7 @@ let AMapCard = class AMapCard extends r$2 {
                         // icon: icon,
                     });
                     // 添加圆形
-                    //设置圆形位置
                     const center = new AMap.LngLat(gcjLng, gcjLat);
-                    //设置圆的半径大小
                     const radius = stateObj.attributes.radius || 10;
                     const circle = new AMap.Circle({
                         center: center, //圆心
@@ -1741,12 +1740,12 @@ let AMapCard = class AMapCard extends r$2 {
                         cursor: "pointer", //鼠标悬停时的鼠标样式
                     });
                     this.map.add(marker);
-                    //圆形 Circle 对象添加到 Map
                     this.map.add(circle);
-                    //根据覆盖物范围调整视野
-                    this.map.setFitView([circle]);
+                    fitView.push(circle);
                 }
             });
+            // 根据覆盖物范围调整视野
+            this.map.setFitView(fitView);
         }
         catch (e) {
             console.error("Failed to load AMap:", e);
