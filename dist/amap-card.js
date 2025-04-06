@@ -419,6 +419,8 @@ function amapCardStyle() {
       flex-direction: column;
       justify-content: center;
       box-sizing: border-box;
+      width: 100%;
+      height: 100%;
     }
 
     #amap {
@@ -426,7 +428,7 @@ function amapCardStyle() {
       margin: 0;
       width: 100%;
       height: 100%;
-      //max-height: 390px;
+      min-height: 390px;
     }
 
     .amap-custom {
@@ -566,7 +568,6 @@ function amapCardStyle() {
     .amap-copyright,
     .amap-logo {
       position: absolute;
-      z-index: 160;
       user-select: none;
       -webkit-user-select: none;
     }
