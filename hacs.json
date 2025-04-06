@@ -1,5 +1,5 @@
 {
-  "name": "AMap Card",
+  "name": "高德地图卡片",
   "render_readme": true,
   "filename":"amap-card.js",
   "country": ["CN"]

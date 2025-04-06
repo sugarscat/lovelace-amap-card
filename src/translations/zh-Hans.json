@@ -33,8 +33,8 @@
         }
       },
       "viewMode": "视图模式",
+      "pitch": "地图俯仰角度(3D)",
       "zoom": "缩放",
-      "traffic": "实时路况",
       "control": {
         "title": "控件",
         "ToolBar": "缩放控件",

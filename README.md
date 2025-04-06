@@ -1,21 +1,19 @@
 # Lovelace AMap Card
 
-Lovelace AMap Card for Home Assistant.
+Home Assistant 的高德地图卡片。
 
-> Home Assistant 的高德地图卡片。
+## 开始
 
-## Getting Started
+## 致谢
 
-## Acknowledgments
+### 贡献者
 
-### Contributors
+感谢您对项目的贡献！
 
-Thanks for your contribution to the project!
+### 开源软件
 
-### Open Source Software
+这款软件的诞生离不开以下支持：
 
-This software wouldn't have been possible without:
-
-| Name                                                                 |                                   License                                   |
+| 项目                                                                 |                                   许可证                                   |
 | -------------------------------------------------------------------- | :-------------------------------------------------------------------------: |
 | [boilerplate-card](https://github.com/custom-cards/boilerplate-card) | [MIT](https://github.com/custom-cards/boilerplate-card/blob/master/LICENSE) |

@@ -11,9 +11,9 @@ export const defaultConfig: AMapCardConfig = {
   security: "",
   lightTheme: "normal",
   darkTheme: "dark",
-  controls: ["ToolBar", "Geolocation"],
-  traffic: false,
+  controls: ["ToolBar"],
   viewMode: "2D",
+  pitch: 30,
   zoom: 15,
   entities: [],
 };
@@ -79,9 +79,11 @@ export class AMapCardEditor extends LitElement implements LovelaceCardEditor {
         label: customLocalize("editor.appearance.viewMode"),
       },
       {
-        name: "traffic",
-        selector: { boolean: {} },
-        label: customLocalize("editor.appearance.traffic"),
+        name: "pitch",
+        selector: {
+          number: { min: 0, max: 83, step: 1, mode: "slider" },
+        },
+        label: customLocalize("editor.appearance.pitch"),
       },
       {
         name: "zoom",

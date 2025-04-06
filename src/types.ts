@@ -10,9 +10,9 @@ export interface AMapCardConfig extends LovelaceCardConfig {
   key: string;
   security: string;
   viewMode: "2D" | "3D";
+  pitch: number;
   lightTheme: AMapTheme;
   darkTheme: AMapTheme;
-  traffic: boolean;
   controls: AMapControl[];
   zoom: number;
   entities: [];

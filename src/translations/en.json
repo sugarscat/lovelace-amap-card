@@ -33,8 +33,8 @@
         }
       },
       "viewMode": "View Mode",
+      "pitch": "Map Pitch Angle (3D)",
       "zoom": "Zoom",
-      "traffic": "Real-time road conditions",
       "control": {
         "title": "Control",
         "ToolBar": "Zoom Control",

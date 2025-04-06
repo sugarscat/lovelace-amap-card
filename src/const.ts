@@ -24,17 +24,12 @@ export const AMAP_CONTROLS = [
 export const AMAP_CONTROLS_POSE = {
   ToolBar: {
     position: {
-      top: "110px",
-      right: "40px",
-    },
-  },
-  ControlBar: {
-    position: {
-      top: "10px",
-      right: "10px",
+      right: "16px",
+      bottom: "50px",
     },
   },
   Scale: null,
+  ControlBar: null,
   Geolocation: null,
   HawkEye: null,
   MapType: null,
