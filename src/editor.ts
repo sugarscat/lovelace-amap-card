@@ -40,13 +40,13 @@ export class AMapCardEditor extends LitElement implements LovelaceCardEditor {
     const schema: any[] = [
       {
         name: "key",
-        selector: { text: {} },
+        selector: { text: { type: "password" } },
         required: true,
         label: customLocalize("editor.api.key"),
       },
       {
         name: "security",
-        selector: { text: {} },
+        selector: { text: { type: "password" } },
         required: true,
         label: customLocalize("editor.api.security"),
       },

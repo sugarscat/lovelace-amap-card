@@ -32,12 +32,40 @@ export class AMapCard extends LitElement implements LovelaceCard {
     return document.createElement("amap-card-editor") as LovelaceCardEditor;
   }
 
+  static getStubConfig(hass: HomeAssistant) {
+    // Find a power entity for default
+    const sampleEntities = Object.keys(hass.states).filter((entityId) => {
+      const entity = hass.states[entityId];
+      return (
+        entity.state &&
+        entity.attributes &&
+        entity.attributes.latitude &&
+        entity.attributes.longitude
+      );
+    });
+
+    // Sample config
+    return {
+      entities: sampleEntities,
+    };
+  }
+
   setConfig(config: AMapCardConfig): void {
     this._config = config;
   }
 
   getCardSize(): number {
-    return 4;
+    return 2;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this._loadMap().then();
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    this.map?.destroy();
   }
 
   protected firstUpdated() {
@@ -108,6 +136,8 @@ export class AMapCard extends LitElement implements LovelaceCard {
             stateObj.attributes.longitude,
             stateObj.attributes.latitude
           );
+          if (!gcjLng || !gcjLat) return;
+
           const imgHtml = this._generateIconHtml(stateObj);
           const markerContent = `
             <div
@@ -135,16 +165,17 @@ export class AMapCard extends LitElement implements LovelaceCard {
           // 添加圆形
           const center = new AMap.LngLat(gcjLng, gcjLat);
           const radius = stateObj.attributes.radius || stateObj.attributes.gps_accuracy || 10;
+          const color = stateObj.attributes.color || "#1791fc";
           const circle = new AMap.Circle({
             center: center, //圆心
             radius: radius, //半径
             borderWeight: 0, //描边的宽度
-            strokeColor: "#1791fc", //轮廓线颜色
+            strokeColor: color, //轮廓线颜色
             strokeOpacity: 0.8, //轮廓线透明度
             strokeWeight: 3, //轮廓线宽度
             fillOpacity: 0.2, //圆形填充透明度
             strokeDasharray: [10, 10],
-            fillColor: "#1791fc", //圆形填充颜色
+            fillColor: color, //圆形填充颜色
             cursor: "pointer", //鼠标悬停时的鼠标样式
           });
 

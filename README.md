@@ -2,7 +2,7 @@
 
 Home Assistant 的高德地图卡片。
 
-## 开始
+## 安装
 
 ### 申请高德地图 API Key
 
@@ -12,7 +12,12 @@ Home Assistant 的高德地图卡片。
 
 HACS > 右上角三个点 > Custom repositories > Repository: https://github.com/sugarscat/lovelace-amap-card.git & Category or Type: Dashboard > ADD > 点击 HACS 的 New 或 Available for download 分类下的“高德地图卡片”，进入集成详情页 > DOWNLOAD
 
-### 截图
+### 手动安装
+
+1. 将 [amap-card.js](dist/amap-card.js) 复制到 `Home Assistant 配置目录/www` 文件夹。
+2. 仪表盘 > 右上角三个点 > 资源 > 添加资源 > 网址：`/local/amap-card.js`, 选择 `JavaScript` 模块.
+
+## 截图
 
 ![截图](./img.jpg)
 
@@ -31,3 +36,4 @@ HACS > 右上角三个点 > Custom repositories > Repository: https://github.com
 | 项目                                                                 |                                   许可证                                   |
 | -------------------------------------------------------------------- | :-------------------------------------------------------------------------: |
 | [boilerplate-card](https://github.com/custom-cards/boilerplate-card) | [MIT](https://github.com/custom-cards/boilerplate-card/blob/master/LICENSE) |
+| [ha-map-card](https://github.com/nathan-gs/ha-map-card) | [MIT](https://github.com/nathan-gs/ha-map-card/blob/main/LICENSE) |
