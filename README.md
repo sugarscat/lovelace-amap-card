@@ -29,7 +29,7 @@ HACS > 右上角三个点 > Custom repositories > Repository: https://github.com
 
 [![贡献者](https://contrib.rocks/image?repo=sugarscat/lovelace-amap-card)](https://github.com/sugarscat/lovelace-amap-card/graphs/contributors)
 
-### 开源软件
+### 开放源代码
 
 这款软件的诞生离不开以下支持：
 
